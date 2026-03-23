@@ -1,0 +1,107 @@
+[
+  {
+    "arxiu_origen": "Aigua-image001.png",
+    "categoria": "Aigua",
+    "data_factura": "25/02/2024",
+    "cost_euros": "",
+    "descripcio": "Consum d'aigua cicle facturació 1 - 193L"
+  },
+  {
+    "arxiu_origen": "Aigua-image002.png",
+    "categoria": "Aigua",
+    "data_factura": "28/02/2024",
+    "cost_euros": "",
+    "descripcio": "Consum d'aigua cicle facturació 2 - 154L"
+  },
+  {
+    "arxiu_origen": "Aigua-image003.png",
+    "categoria": "Aigua",
+    "data_factura": "29/02/2024",
+    "cost_euros": "",
+    "descripcio": "Consum d'aigua cicle facturació 3  - 175L"
+  },
+  {
+    "arxiu_origen": "F035-MaterialOficina",
+    "categoria": "Lyreco (Material)",
+    "data_factura": "30/04/2024",
+    "cost_euros": "277,13 €",
+    "descripcio": "Material d'oficina divers (Marcadors...)"
+  },
+  {
+    "arxiu_origen": "F036-Lyreco-Material",
+    "categoria": "Lyreco (Material)",
+    "data_factura": "31/05/2024",
+    "cost_euros": "261,24 €",
+    "descripcio": "Material Lyreco (Pissarra i paper)"
+  },
+  {
+    "arxiu_origen": "F039-NP.png",
+    "categoria": "Lyreco (Material)",
+    "data_factura": "13/09/2024",
+    "cost_euros": "1.012,98 €",
+    "descripcio": "Material Lyreco (Serveis, materials (fusta/ferro)"
+  },
+  {
+    "arxiu_origen": "F041-NP.png",
+    "categoria": "Lyreco (Material)",
+    "data_factura": "05/07/2024",
+    "cost_euros": "348,48 €",
+    "descripcio": "Material Lyreco (Serveis)"
+  },
+  {
+    "arxiu_origen": "F046-NP.png",
+    "categoria": "Lyreco (Material)",
+    "data_factura": "23/05/2024",
+    "cost_euros": "2.548,02 €",
+    "descripcio": "Material Lyreco (Serveis i connexions)"
+  },
+  {
+    "arxiu_origen": "Desclasificat.png",
+    "categoria": "Material Informàtic",
+    "data_factura": "19/06/2024",
+    "cost_euros": "28,40 €",
+    "descripcio": "Recanvi marcador de pissarra"
+  },
+  {
+    "arxiu_origen": "F055-Neteges.png",
+    "categoria": "Neteja i Residus",
+    "data_factura": "20/06/2024",
+    "cost_euros": "750,26 €",
+    "descripcio": "Productes de neteja, paper higiènic, lleixiu"
+  },
+  {
+    "arxiu_origen": "F056-Neteges.png",
+    "categoria": "Neteja i Residus",
+    "data_factura": "27/05/2024",
+    "cost_euros": "454,72 €",
+    "descripcio": "Productes de neteja i manteniment"
+  },
+  {
+    "arxiu_origen": "F078-DIGI-MAIG.png",
+    "categoria": "Telecomunicacions",
+    "data_factura": "01/05/2024",
+    "cost_euros": "30,00 €",
+    "descripcio": "Serveis d'accés a Internet Digi"
+  },
+  {
+    "arxiu_origen": "F294-O2-Març.png",
+    "categoria": "Telecomunicacions",
+    "data_factura": "04/03/2024",
+    "cost_euros": "50,00 €",
+    "descripcio": "Serveis d'accés a Internet O2"
+  },
+  {
+    "arxiu_origen": "F327-34.png",
+    "categoria": "Subministraments",
+    "data_factura": "30/06/2024",
+    "cost_euros": "34,36 €",
+    "descripcio": "Despeses generals operacionals"
+  },
+  {
+    "arxiu_origen": "F328-198.png",
+    "categoria": "Subministraments",
+    "data_factura": "31/10/2024",
+    "cost_euros": "198,56 €",
+    "descripcio": "Despeses generals operacionals"
+  }
+]
