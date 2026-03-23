@@ -1,0 +1,62 @@
+{
+  "metadata": {
+    "projecte": "ITB Leaks - Auditoria de Recursos",
+    "equip": "Red Team - ASIX (Fran i Ruben)",
+    "data_extraccio": "2026-03-22"
+  },
+  "indicadors_clau": [
+    {
+      "id_indicador": "IND-01",
+      "nom": "Consum d'Aigua (m3)",
+      "descripcio": "Volum d'aigua facturat detectat als leaks"
+    },
+    {
+      "id_indicador": "IND-02",
+      "nom": "Despesa Hídrica (€)",
+      "descripcio": "Cost econòmic derivat de les factures d'aigua"
+    },
+    {
+      "id_indicador": "IND-03",
+      "nom": "Consumibles Plàstic i Paper",
+      "descripcio": "Quantitat de material d'oficina (Lyreco)"
+    },
+    {
+      "id_indicador": "IND-04",
+      "nom": "Cost Material No Sostenible (€)",
+      "descripcio": "Despesa en elements sense economia circular"
+    }
+  ],
+  "dades_filtrades": {
+    "factures_aigua": [
+      {
+        "arxiu_origen": "Aigua-image001.png",
+        "consum_m3": 145,
+        "cost_euros": 320.50
+      },
+      {
+        "arxiu_origen": "Aigua-image002.png",
+        "consum_m3": 130,
+        "cost_euros": 290.10
+      },
+      {
+        "arxiu_origen": "Aigua-image003.png",
+        "consum_m3": 125,
+        "cost_euros": 285.00
+      }
+    ],
+    "factures_lyreco": [
+      {
+        "arxiu_origen": "F035-MaterialOficina",
+        "tipus_compra": "Paper i retoladors no recarregables",
+        "quantitat_paquets": 170,
+        "cost_euros": 430.00
+      },
+      {
+        "arxiu_origen": "F036-Lyreco-Material",
+        "tipus_compra": "Recanvis i cel·lulosa",
+        "quantitat_paquets": 30,
+        "cost_euros": 110.00
+      }
+    ]
+  }
+}
