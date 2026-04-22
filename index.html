@@ -10,7 +10,6 @@
 </head>
 <body>
 
-  <!-- HEADER -->
   <header class="site-header">
     <div class="header-inner">
       <div class="logo-area">
@@ -22,24 +21,15 @@
       </div>
       <nav class="main-nav">
         <a href="#calculadora" class="nav-link">Calculadora</a>
-        <a href="#graficos"   class="nav-link">Gráficos</a>
-        <a href="#historico"  class="nav-link">Datos históricos</a>
       </nav>
     </div>
   </header>
 
-  <!-- HERO -->
   <section class="hero">
     <div class="hero-inner">
       <span class="hero-tag">Fase 3 · Sostenibilitat TIC</span>
       <h1 class="hero-title">¿Podemos reducir<br/><em>un 30%</em> el impacto<br/>ambiental del centro?</h1>
       <p class="hero-desc">Calculadora de análisis y predicción del consumo energético, hídrico y de consumibles del ITB.<br/>Basada en datos históricos obtenidos de las facturas ITB Leaks (2024).</p>
-      <div class="hero-badges">
-        <span class="hero-info-tag">⚡ Electricidad</span>
-        <span class="hero-info-tag">💧 Agua</span>
-        <span class="hero-info-tag">📦 Consumibles</span>
-        <span class="hero-info-tag">🧹 Limpieza</span>
-      </div>
     </div>
     <div class="hero-deco" aria-hidden="true">
       <div class="deco-ring r1"></div>
@@ -48,20 +38,18 @@
     </div>
   </section>
 
-  <!-- CALCULADORA -->
   <section id="calculadora" class="section">
     <div class="container">
       <span class="section-tag">🔢 Calculadora principal</span>
       <h2 class="section-title">Calcula el consumo del ITB</h2>
-      <p class="section-desc">Selecciona el indicador y el período. La calculadora aplica <strong>estacionalidad real</strong> (agosto cerrado = consumo mínimo solo sistemas), <strong>tendencias temporales</strong> y <strong>variabilidad mensual</strong> basadas en los datos históricos ITB 2024.</p>
+      <p class="section-desc">Selecciona el indicador y el período. La calculadora aplica <strong>estacionalidad real</strong>, <strong>tendencias temporales</strong> y <strong>variabilidad mensual</strong> basadas en los datos históricos ITB 2024.</p>
 
-      <!-- BOTÓN GLOBAL APLICAR TODAS LAS MEDIDAS -->
       <div class="global-apply-bar">
         <div class="global-apply-info">
           <span class="global-apply-icon">♻️</span>
           <div>
-            <strong>Aplicar todas las medidas de reducción</strong>
-            <p>Marca automáticamente todas las acciones disponibles para alcanzar el objetivo −30% en cada indicador.</p>
+            <strong>Medidas de reducción globales</strong>
+            <p>Activa o desactiva todas las acciones disponibles para alcanzar el objetivo −30% en cada indicador.</p>
           </div>
         </div>
         <div class="global-apply-btns">
@@ -76,6 +64,9 @@
         <button class="tab-btn" data-tab="consumibles">📦 Consumibles</button>
         <button class="tab-btn" data-tab="limpieza">🧹 Limpieza</button>
         <button class="tab-btn" data-tab="categories">🔧 Mantenimiento</button>
+        <button class="tab-btn" data-tab="resumen">📊 Resumen</button>
+        <button class="tab-btn" data-tab="historico">📂 Datos históricos</button>
+        <button class="tab-btn" data-tab="cronograma">📅 Cronograma</button>
       </div>
 
       <!-- ELECTRICIDAD -->
@@ -116,53 +107,33 @@
               <span class="form-hint">Negativo = mejoras de eficiencia aplicadas</span>
             </label>
             <button class="btn-calc" onclick="calcularElectricidad()">⚡ Calcular consumo eléctrico</button>
-
-            <!-- ACCIONES DE REDUCCIÓN INTEGRADAS -->
             <div class="inline-reduction">
               <div class="inline-red-header">
                 <span>♻️ Medidas de ahorro — Electricidad</span>
                 <span class="red-saving-total" id="elec-saving-display">Ahorro: <strong>0%</strong></span>
               </div>
               <div class="red-actions">
-                <div class="red-action-apply">
-                  <div class="action-check-area">
-                    <input type="checkbox" id="chk-elec-1" class="action-checkbox" onchange="aplicarAhorro('elec')"/>
-                    <label for="chk-elec-1" class="action-checkbox-label">
-                      <span class="action-num-inline">01</span>
-                      <div>
-                        <strong>Scripts de apagado automático (GPO / Active Directory)</strong>
-                        <p>Apaga o suspende todos los equipos de las aulas automáticamente al acabar el horario lectivo. También controla las luces de las salas.</p>
-                        <span class="saving-badge">−15% consumo</span>
-                      </div>
-                    </label>
-                  </div>
-                </div>
-                <div class="red-action-apply">
-                  <div class="action-check-area">
-                    <input type="checkbox" id="chk-elec-2" class="action-checkbox" onchange="aplicarAhorro('elec')"/>
-                    <label for="chk-elec-2" class="action-checkbox-label">
-                      <span class="action-num-inline">02</span>
-                      <div>
-                        <strong>Sensores de presencia para iluminación</strong>
-                        <p>Instalación en pasillos y aulas para apagado automático cuando no hay nadie. Bajo coste, alto retorno.</p>
-                        <span class="saving-badge">−10% consumo</span>
-                      </div>
-                    </label>
-                  </div>
-                </div>
-                <div class="red-action-apply">
-                  <div class="action-check-area">
-                    <input type="checkbox" id="chk-elec-3" class="action-checkbox" onchange="aplicarAhorro('elec')"/>
-                    <label for="chk-elec-3" class="action-checkbox-label">
-                      <span class="action-num-inline">03</span>
-                      <div>
-                        <strong>Sustitución de equipos obsoletos (Energy Star)</strong>
-                        <p>Reemplazar ordenadores de más de 8 años. Los nuevos consumen hasta un 40% menos en standby.</p>
-                        <span class="saving-badge">−8% consumo</span>
-                      </div>
-                    </label>
-                  </div>
-                </div>
+                <div class="red-action-apply"><div class="action-check-area">
+                  <input type="checkbox" id="chk-elec-1" class="action-checkbox" onchange="aplicarAhorro('elec')"/>
+                  <label for="chk-elec-1" class="action-checkbox-label"><span class="action-num-inline">01</span>
+                    <div><strong>Scripts de apagado automático (GPO / Active Directory)</strong>
+                    <p>Apaga o suspende todos los equipos de las aulas automáticamente al acabar el horario lectivo. También controla las luces.</p>
+                    <span class="saving-badge">−15% consumo</span></div></label>
+                </div></div>
+                <div class="red-action-apply"><div class="action-check-area">
+                  <input type="checkbox" id="chk-elec-2" class="action-checkbox" onchange="aplicarAhorro('elec')"/>
+                  <label for="chk-elec-2" class="action-checkbox-label"><span class="action-num-inline">02</span>
+                    <div><strong>Sensores de presencia para iluminación</strong>
+                    <p>Instalación en pasillos y aulas para apagado automático cuando no hay nadie. Bajo coste, alto retorno.</p>
+                    <span class="saving-badge">−10% consumo</span></div></label>
+                </div></div>
+                <div class="red-action-apply"><div class="action-check-area">
+                  <input type="checkbox" id="chk-elec-3" class="action-checkbox" onchange="aplicarAhorro('elec')"/>
+                  <label for="chk-elec-3" class="action-checkbox-label"><span class="action-num-inline">03</span>
+                    <div><strong>Sustitución de equipos obsoletos (Energy Star)</strong>
+                    <p>Reemplazar ordenadores de más de 8 años. Los nuevos consumen hasta un 40% menos en standby.</p>
+                    <span class="saving-badge">−8% consumo</span></div></label>
+                </div></div>
               </div>
               <div class="apply-result" id="apply-elec"></div>
             </div>
@@ -217,53 +188,33 @@
               </select>
             </label>
             <button class="btn-calc" onclick="calcularAgua()">💧 Calcular consumo de agua</button>
-
-            <!-- ACCIONES DE REDUCCIÓN INTEGRADAS -->
             <div class="inline-reduction">
               <div class="inline-red-header">
                 <span>♻️ Medidas de ahorro — Agua</span>
                 <span class="red-saving-total" id="agua-saving-display">Ahorro: <strong>0%</strong></span>
               </div>
               <div class="red-actions">
-                <div class="red-action-apply">
-                  <div class="action-check-area">
-                    <input type="checkbox" id="chk-agua-1" class="action-checkbox" onchange="aplicarAhorro('agua')"/>
-                    <label for="chk-agua-1" class="action-checkbox-label">
-                      <span class="action-num-inline">01</span>
-                      <div>
-                        <strong>Aireadores y grifos con temporizador</strong>
-                        <p>Reducen el caudal un 50% sin pérdida de funcionalidad. Coste muy bajo, instalación rápida.</p>
-                        <span class="saving-badge">−15% consumo</span>
-                      </div>
-                    </label>
-                  </div>
-                </div>
-                <div class="red-action-apply">
-                  <div class="action-check-area">
-                    <input type="checkbox" id="chk-agua-2" class="action-checkbox" onchange="aplicarAhorro('agua')"/>
-                    <label for="chk-agua-2" class="action-checkbox-label">
-                      <span class="action-num-inline">02</span>
-                      <div>
-                        <strong>Monitorización nocturna de fugas (contador digital)</strong>
-                        <p>El ITB ya tiene contador digital (datos feb'24). Alertas automáticas si hay consumo entre 12AM–6AM indica fuga.</p>
-                        <span class="saving-badge">−12% consumo</span>
-                      </div>
-                    </label>
-                  </div>
-                </div>
-                <div class="red-action-apply">
-                  <div class="action-check-area">
-                    <input type="checkbox" id="chk-agua-3" class="action-checkbox" onchange="aplicarAhorro('agua')"/>
-                    <label for="chk-agua-3" class="action-checkbox-label">
-                      <span class="action-num-inline">03</span>
-                      <div>
-                        <strong>Cisternas de doble descarga (3L / 6L)</strong>
-                        <p>Sustitución de cisternas antiguas. Ahorro del 50% por descarga en todos los baños.</p>
-                        <span class="saving-badge">−8% consumo</span>
-                      </div>
-                    </label>
-                  </div>
-                </div>
+                <div class="red-action-apply"><div class="action-check-area">
+                  <input type="checkbox" id="chk-agua-1" class="action-checkbox" onchange="aplicarAhorro('agua')"/>
+                  <label for="chk-agua-1" class="action-checkbox-label"><span class="action-num-inline">01</span>
+                    <div><strong>Aireadores y grifos con temporizador</strong>
+                    <p>Reducen el caudal un 50% sin pérdida de funcionalidad. Coste muy bajo, instalación rápida.</p>
+                    <span class="saving-badge">−15% consumo</span></div></label>
+                </div></div>
+                <div class="red-action-apply"><div class="action-check-area">
+                  <input type="checkbox" id="chk-agua-2" class="action-checkbox" onchange="aplicarAhorro('agua')"/>
+                  <label for="chk-agua-2" class="action-checkbox-label"><span class="action-num-inline">02</span>
+                    <div><strong>Monitorización nocturna de fugas (contador digital)</strong>
+                    <p>El ITB ya tiene contador digital (datos feb'24). Alertas automáticas si hay consumo entre 12AM–6AM indica fuga.</p>
+                    <span class="saving-badge">−12% consumo</span></div></label>
+                </div></div>
+                <div class="red-action-apply"><div class="action-check-area">
+                  <input type="checkbox" id="chk-agua-3" class="action-checkbox" onchange="aplicarAhorro('agua')"/>
+                  <label for="chk-agua-3" class="action-checkbox-label"><span class="action-num-inline">03</span>
+                    <div><strong>Cisternas de doble descarga (3L / 6L)</strong>
+                    <p>Sustitución de cisternas antiguas. Ahorro del 50% por descarga en todos los baños.</p>
+                    <span class="saving-badge">−8% consumo</span></div></label>
+                </div></div>
               </div>
               <div class="apply-result" id="apply-agua"></div>
             </div>
@@ -284,7 +235,7 @@
         <div class="calc-layout">
           <div class="calc-controls">
             <h3 class="ctrl-title">📦 Consumibles de Oficina</h3>
-            <p class="ctrl-desc">Facturas Lyreco 2024: ene(60€), mar(49€), may(224€), jun(149€), set(117€). Agosto y julio = 0€ (cerrado / sin alumnos). Diciembre y enero reducidos. Picos en septiembre (inicio curso) y evaluaciones.</p>
+            <p class="ctrl-desc">Facturas Lyreco 2024: abr(277€), may(261€), jun(34€), oct(199€). <strong>Julio: mínimo (~25%) — solo profesores (reuniones, memorias)</strong>. Agosto = 0€ (centro cerrado). Diciembre y enero reducidos. Picos en septiembre (inicio curso) y evaluaciones.</p>
             <label class="form-label">Gasto mensual base (€)
               <input type="number" id="cons-base" value="120" min="10" class="form-input"/>
               <span class="form-hint">Media real meses lectivos: ~120 €/mes (Lyreco 2024)</span>
@@ -313,53 +264,33 @@
               <span class="range-val" id="cons-tend-val">+2%</span>
             </label>
             <button class="btn-calc" onclick="calcularConsumibles()">📦 Calcular consumibles</button>
-
-            <!-- ACCIONES DE REDUCCIÓN INTEGRADAS -->
             <div class="inline-reduction">
               <div class="inline-red-header">
                 <span>♻️ Medidas de ahorro — Consumibles</span>
                 <span class="red-saving-total" id="cons-saving-display">Ahorro: <strong>0%</strong></span>
               </div>
               <div class="red-actions">
-                <div class="red-action-apply">
-                  <div class="action-check-area">
-                    <input type="checkbox" id="chk-cons-1" class="action-checkbox" onchange="aplicarAhorro('cons')"/>
-                    <label for="chk-cons-1" class="action-checkbox-label">
-                      <span class="action-num-inline">01</span>
-                      <div>
-                        <strong>Política paper-less en aulas TIC</strong>
-                        <p>Entregas telemáticas, pizarras digitales, apuntes en PDF. Las aulas ASIX ya tienen ordenadores: eliminar impresión innecesaria.</p>
-                        <span class="saving-badge">−20% gasto</span>
-                      </div>
-                    </label>
-                  </div>
-                </div>
-                <div class="red-action-apply">
-                  <div class="action-check-area">
-                    <input type="checkbox" id="chk-cons-2" class="action-checkbox" onchange="aplicarAhorro('cons')"/>
-                    <label for="chk-cons-2" class="action-checkbox-label">
-                      <span class="action-num-inline">02</span>
-                      <div>
-                        <strong>Marcadores recargables y papel FSC</strong>
-                        <p>Ya se usan Pilot BeGreen con recambio (facturas Lyreco). Extender política a todos los consumibles posibles.</p>
-                        <span class="saving-badge">−8% gasto</span>
-                      </div>
-                    </label>
-                  </div>
-                </div>
-                <div class="red-action-apply">
-                  <div class="action-check-area">
-                    <input type="checkbox" id="chk-cons-3" class="action-checkbox" onchange="aplicarAhorro('cons')"/>
-                    <label for="chk-cons-3" class="action-checkbox-label">
-                      <span class="action-num-inline">03</span>
-                      <div>
-                        <strong>Compra centralizada y planificada</strong>
-                        <p>Pedidos agrupados para reducir costes de envío y eliminar compras urgentes. Revisión trimestral de stock.</p>
-                        <span class="saving-badge">−5% gasto</span>
-                      </div>
-                    </label>
-                  </div>
-                </div>
+                <div class="red-action-apply"><div class="action-check-area">
+                  <input type="checkbox" id="chk-cons-1" class="action-checkbox" onchange="aplicarAhorro('cons')"/>
+                  <label for="chk-cons-1" class="action-checkbox-label"><span class="action-num-inline">01</span>
+                    <div><strong>Política paper-less en aulas TIC</strong>
+                    <p>Entregas telemáticas, pizarras digitales, apuntes en PDF. Las aulas ASIX ya tienen ordenadores: eliminar impresión innecesaria.</p>
+                    <span class="saving-badge">−20% gasto</span></div></label>
+                </div></div>
+                <div class="red-action-apply"><div class="action-check-area">
+                  <input type="checkbox" id="chk-cons-2" class="action-checkbox" onchange="aplicarAhorro('cons')"/>
+                  <label for="chk-cons-2" class="action-checkbox-label"><span class="action-num-inline">02</span>
+                    <div><strong>Marcadores recargables y papel FSC</strong>
+                    <p>Ya se usan Pilot BeGreen con recambio (facturas Lyreco). Extender política a todos los consumibles posibles.</p>
+                    <span class="saving-badge">−8% gasto</span></div></label>
+                </div></div>
+                <div class="red-action-apply"><div class="action-check-area">
+                  <input type="checkbox" id="chk-cons-3" class="action-checkbox" onchange="aplicarAhorro('cons')"/>
+                  <label for="chk-cons-3" class="action-checkbox-label"><span class="action-num-inline">03</span>
+                    <div><strong>Compra centralizada y planificada</strong>
+                    <p>Pedidos agrupados para reducir costes de envío y eliminar compras urgentes. Revisión trimestral de stock.</p>
+                    <span class="saving-badge">−5% gasto</span></div></label>
+                </div></div>
               </div>
               <div class="apply-result" id="apply-cons"></div>
             </div>
@@ -371,7 +302,7 @@
         <div class="chart-wrapper">
           <h4 class="chart-title">Distribución mensual — Consumibles</h4>
           <canvas id="chart-cons" height="80"></canvas>
-          <p class="chart-note">🚫 Agosto y julio = 0€ (sin actividad) · 📉 Diciembre = muy reducido · 📚 Picos: sep (inicio curso), abr/may (evaluaciones)</p>
+          <p class="chart-note">🚫 Agosto = 0€ (centro cerrado) · 📉 Julio = mínimo ~30€ (solo profes) · 📉 Diciembre = muy reducido · 📚 Picos: sep (inicio curso), abr/may (evaluaciones)</p>
         </div>
       </div>
 
@@ -380,10 +311,10 @@
         <div class="calc-layout">
           <div class="calc-controls">
             <h3 class="ctrl-title">🧹 Productos de Limpieza</h3>
-            <p class="ctrl-desc">Facturas reales: oct(346€), nov(669€), jun(454€). Agosto = 0€ (centro cerrado, no hay personal de limpieza). Julio: pico de limpieza general de fin de curso. Junio reducido (última semana solo profesores).</p>
+            <p class="ctrl-desc">Facturas reales: may(454€), jun(750€). Agosto = 0€ (centro cerrado, no hay personal de limpieza). Julio: pico de limpieza general de fin de curso (~1.40×base ≈ 690€). Junio reducido (última semana solo profesores).</p>
             <label class="form-label">Gasto mensual base (€)
               <input type="number" id="limp-base" value="507" min="50" class="form-input"/>
-              <span class="form-hint">Media real: (346+669)÷2 ≈ 507 €/mes (oct+nov 2024)</span>
+              <span class="form-hint">Media real: (454+750)÷2 ≈ 602€; base normalizada: ~507 €/mes</span>
             </label>
             <label class="form-label">Tipo de cálculo
               <select id="limp-tipo" class="form-select">
@@ -411,53 +342,33 @@
               </select>
             </label>
             <button class="btn-calc" onclick="calcularLimpieza()">🧹 Calcular limpieza</button>
-
-            <!-- ACCIONES DE REDUCCIÓN INTEGRADAS -->
             <div class="inline-reduction">
               <div class="inline-red-header">
                 <span>♻️ Medidas de ahorro — Limpieza</span>
                 <span class="red-saving-total" id="limp-saving-display">Ahorro: <strong>0%</strong></span>
               </div>
               <div class="red-actions">
-                <div class="red-action-apply">
-                  <div class="action-check-area">
-                    <input type="checkbox" id="chk-limp-1" class="action-checkbox" onchange="aplicarAhorro('limp')"/>
-                    <label for="chk-limp-1" class="action-checkbox-label">
-                      <span class="action-num-inline">01</span>
-                      <div>
-                        <strong>Productos concentrados con dosificadores</strong>
-                        <p>1L de concentrado = 10L de producto normal. Menos plástico, menos coste, misma eficacia.</p>
-                        <span class="saving-badge">−25% gasto</span>
-                      </div>
-                    </label>
-                  </div>
-                </div>
-                <div class="red-action-apply">
-                  <div class="action-check-area">
-                    <input type="checkbox" id="chk-limp-2" class="action-checkbox" onchange="aplicarAhorro('limp')"/>
-                    <label for="chk-limp-2" class="action-checkbox-label">
-                      <span class="action-num-inline">02</span>
-                      <div>
-                        <strong>Secadores de aire eléctricos en zonas de alto tráfico</strong>
-                        <p>Reduce papel secamanos hasta un 50% en baños principales. Inversión amortizable en 1–2 años.</p>
-                        <span class="saving-badge">−10% gasto</span>
-                      </div>
-                    </label>
-                  </div>
-                </div>
-                <div class="red-action-apply">
-                  <div class="action-check-area">
-                    <input type="checkbox" id="chk-limp-3" class="action-checkbox" onchange="aplicarAhorro('limp')"/>
-                    <label for="chk-limp-3" class="action-checkbox-label">
-                      <span class="action-num-inline">03</span>
-                      <div>
-                        <strong>Gestión de recogida según ocupación real</strong>
-                        <p>Ajustar frecuencia de recogida a la ocupación del centro. En vacaciones y agosto = mínimo servicio.</p>
-                        <span class="saving-badge">−5% gasto</span>
-                      </div>
-                    </label>
-                  </div>
-                </div>
+                <div class="red-action-apply"><div class="action-check-area">
+                  <input type="checkbox" id="chk-limp-1" class="action-checkbox" onchange="aplicarAhorro('limp')"/>
+                  <label for="chk-limp-1" class="action-checkbox-label"><span class="action-num-inline">01</span>
+                    <div><strong>Productos concentrados con dosificadores</strong>
+                    <p>1L de concentrado = 10L de producto normal. Menos plástico, menos coste, misma eficacia.</p>
+                    <span class="saving-badge">−25% gasto</span></div></label>
+                </div></div>
+                <div class="red-action-apply"><div class="action-check-area">
+                  <input type="checkbox" id="chk-limp-2" class="action-checkbox" onchange="aplicarAhorro('limp')"/>
+                  <label for="chk-limp-2" class="action-checkbox-label"><span class="action-num-inline">02</span>
+                    <div><strong>Secadores de aire eléctricos en zonas de alto tráfico</strong>
+                    <p>Reduce papel secamanos hasta un 50% en baños principales. Inversión amortizable en 1–2 años.</p>
+                    <span class="saving-badge">−10% gasto</span></div></label>
+                </div></div>
+                <div class="red-action-apply"><div class="action-check-area">
+                  <input type="checkbox" id="chk-limp-3" class="action-checkbox" onchange="aplicarAhorro('limp')"/>
+                  <label for="chk-limp-3" class="action-checkbox-label"><span class="action-num-inline">03</span>
+                    <div><strong>Gestión de recogida según ocupación real</strong>
+                    <p>Ajustar frecuencia de recogida a la ocupación del centro. En vacaciones y agosto = mínimo servicio.</p>
+                    <span class="saving-badge">−5% gasto</span></div></label>
+                </div></div>
               </div>
               <div class="apply-result" id="apply-limp"></div>
             </div>
@@ -469,7 +380,7 @@
         <div class="chart-wrapper">
           <h4 class="chart-title">Distribución mensual — Limpieza</h4>
           <canvas id="chart-limp" height="80"></canvas>
-          <p class="chart-note">🚫 Agosto = 0€ (cerrado, sin personal) · 📈 Julio = pico (limpieza general fin de curso) · 📉 Junio ligeramente reducido (última semana solo profes)</p>
+          <p class="chart-note">🚫 Agosto = 0€ (cerrado, sin personal) · 📈 Julio = pico ~690€ (limpieza general fin de curso) · 📉 Junio ligeramente reducido (última semana solo profes)</p>
         </div>
       </div>
 
@@ -486,7 +397,7 @@
                 <li><span>Ferro i fusta (set'24)</span><strong>1.012,98 €</strong></li>
                 <li><span>Renovació QGP (mai'24)</span><strong>2.548,02 €</strong></li>
                 <li><span>DIGI Fibra (mai'24)</span><strong>30,00 €/mes</strong></li>
-                <li><span>O2 Fibra+Mòbil (mar'24)</span><strong>38,00 €/mes</strong></li>
+                <li><span>O2 Fibra+Mòbil (mar'24)</span><strong>50,00 €/mes</strong></li>
               </ul>
             </div>
             <label class="form-label">Número de meses
@@ -499,7 +410,7 @@
             </label>
             <div class="categ-legend">
               <div class="categ-legend-item"><span class="categ-dot" style="background:#bc8cff"></span><span>Mantenimiento ~326 €/mes <em>(±3%)</em></span></div>
-              <div class="categ-legend-item"><span class="categ-dot" style="background:#58a6ff"></span><span>Telecomunicaciones 68 €/mes <em>(0% fijo)</em></span></div>
+              <div class="categ-legend-item"><span class="categ-dot" style="background:#58a6ff"></span><span>Telecomunicaciones 80 €/mes <em>(0% fijo)</em></span></div>
               <div class="categ-legend-item"><span class="categ-dot" style="background:#e3b341"></span><span>Residuos ~50 €/mes <em>(±3%)</em></span></div>
             </div>
             <button class="btn-calc" onclick="calcularCategories()">🔧 Calcular gastos fijos</button>
@@ -511,107 +422,162 @@
         <div class="chart-wrapper">
           <h4 class="chart-title">Distribución mensual — Gastos fijos (apilado)</h4>
           <canvas id="chart-categ" height="80"></canvas>
-          <p class="chart-note">🔧 Barras casi iguales cada mes = costes <strong>constantes y previsibles</strong> (Estrategia C). La pequeña variación ±3% simula imprevistos menores.</p>
+          <p class="chart-note">🔧 Barras casi iguales cada mes = costes <strong>constantes y previsibles</strong>. La pequeña variación ±3% simula imprevistos menores.</p>
+        </div>
+      </div>
+
+      <!-- RESUMEN GLOBAL (pestaña) -->
+      <div class="tab-panel" id="tab-resumen">
+        <div class="tab-section-intro">
+          <span class="section-tag" style="margin-bottom:0">📊 Resumen global automático</span>
+          <p>Los valores se actualizan automáticamente al calcular cada indicador. El resumen refleja el año completo con estacionalidad real.</p>
+        </div>
+        <div class="chart-wrapper" style="margin-top:24px">
+          <canvas id="chart-resumen" height="100"></canvas>
+        </div>
+        <div class="summary-cards" id="summary-cards">
+          <div class="sum-card"><span class="sum-icon">⚡</span><span class="sum-label">Electricidad/año</span><span class="sum-val" id="sum-elec">—</span></div>
+          <div class="sum-card"><span class="sum-icon">💧</span><span class="sum-label">Agua/año</span><span class="sum-val" id="sum-agua">—</span></div>
+          <div class="sum-card"><span class="sum-icon">📦</span><span class="sum-label">Consumibles/año</span><span class="sum-val" id="sum-cons">—</span></div>
+          <div class="sum-card"><span class="sum-icon">🧹</span><span class="sum-label">Limpieza/año</span><span class="sum-val" id="sum-limp">—</span></div>
+          <div class="sum-card"><span class="sum-icon">🔧</span><span class="sum-label">Mant.+Telecom/año</span><span class="sum-val" id="sum-categ">—</span></div>
+          <div class="sum-card sum-card-total"><span class="sum-icon">💶</span><span class="sum-label">Total estimado/año</span><span class="sum-val" id="sum-total">—</span></div>
+        </div>
+      </div>
+
+      <!-- DATOS HISTÓRICOS (pestaña) -->
+      <div class="tab-panel" id="tab-historico">
+        <div class="tab-section-intro">
+          <span class="section-tag" style="margin-bottom:0">📂 ITB Leaks 2024 — Datos históricos</span>
+          <p>Valores del año 2024 extraídos de las facturas mediante <strong>data cleaning</strong> de los documentos ITB Leaks. Estos datos alimentan los cálculos de la calculadora.</p>
+        </div>
+        <div class="hist-grid">
+          <div class="hist-card">
+            <div class="hist-card-header"><span class="hist-icon">⚡</span><h3>Electricidad</h3></div>
+            <table class="hist-table">
+              <thead><tr><th>Concepto</th><th>Importe</th></tr></thead>
+              <tbody>
+                <tr><td>Renovación QGP (may'24)</td><td>2.548,02 €</td></tr>
+                <tr><td>Mant. AACC urgente (jul'24)</td><td>348,48 €</td></tr>
+                <tr><td>Fibra DIGI (mensual)</td><td>30,00 €/mes</td></tr>
+                <tr><td>Fibra O2 Fibra+Mòvil (mensual)</td><td>50,00 €/mes</td></tr>
+              </tbody>
+            </table>
+            <p class="hist-note">Base estimada: <strong>~4.200 kWh/mes</strong></p>
+          </div>
+          <div class="hist-card">
+            <div class="hist-card-header"><span class="hist-icon">💧</span><h3>Agua</h3></div>
+            <table class="hist-table">
+              <thead><tr><th>Concepto</th><th>Importe</th></tr></thead>
+              <tbody>
+                <tr><td>Ciclo 1 (feb'24) — 57 m³</td><td>228,87 €</td></tr>
+                <tr><td>Ciclo 2 (abr'24) — 49 m³</td><td>198,39 €</td></tr>
+                <tr><td>Ciclo 3 (jun'24) — 68 m³</td><td>276,46 €</td></tr>
+                <tr><td>Lectura máx. diaria (28/02/24)</td><td>~7.200 L/día</td></tr>
+              </tbody>
+            </table>
+            <p class="hist-note">Media: <strong>~5.000 L/día lectivo</strong></p>
+          </div>
+          <div class="hist-card">
+            <div class="hist-card-header"><span class="hist-icon">📦</span><h3>Consumibles de oficina</h3></div>
+            <table class="hist-table">
+              <thead><tr><th>Concepto</th><th>Importe</th></tr></thead>
+              <tbody>
+                <tr><td>Lyreco abr'24</td><td>277,13 €</td></tr>
+                <tr><td>Lyreco may'24</td><td>261,24 €</td></tr>
+                <tr><td>Lyreco jun'24</td><td>34,36 €</td></tr>
+                <tr><td>Lyreco oct'24</td><td>198,56 €</td></tr>
+              </tbody>
+            </table>
+            <p class="hist-note">Media mensual lectivo: <strong>~120 €/mes</strong></p>
+          </div>
+          <div class="hist-card">
+            <div class="hist-card-header"><span class="hist-icon">🧹</span><h3>Productos de limpieza</h3></div>
+            <table class="hist-table">
+              <thead><tr><th>Concepto</th><th>Importe</th></tr></thead>
+              <tbody>
+                <tr><td>Neteges may'24</td><td>454,72 €</td></tr>
+                <tr><td>Neteges jun'24</td><td>750,26 €</td></tr>
+              </tbody>
+            </table>
+            <p class="hist-note">Media mensual (may+jun): <strong>~602 €/mes</strong></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- CRONOGRAMA 4 AÑOS (pestaña) -->
+      <div class="tab-panel" id="tab-cronograma">
+        <div class="tab-section-intro">
+          <span class="section-tag" style="margin-bottom:0">📅 Cronograma de reducción — Próximos 4 años</span>
+          <p>Plan de acción para reducir un 30% el impacto ambiental del ITB. Los porcentajes de ahorro estimados se basan en los valores calculados por la calculadora.</p>
+        </div>
+
+        <div class="crono-grid">
+          <div class="crono-card crono-year0">
+            <div class="crono-year-badge">📍 Año actual · 2025</div>
+            <h3 class="crono-title">Línea base — Diagnosi</h3>
+            <p class="crono-desc">Establecemos el punto de partida con datos reales de las facturas ITB Leaks 2024. Sin medidas aplicadas aún.</p>
+            <div class="crono-actions">
+              <div class="crono-action"><span class="crono-dot"></span><span>Recogida de datos (ITB Leaks)</span></div>
+              <div class="crono-action"><span class="crono-dot"></span><span>Informe diagnóstico ASG completado</span></div>
+              <div class="crono-action"><span class="crono-dot"></span><span>Calculadora energética desplegada</span></div>
+              <div class="crono-action"><span class="crono-dot"></span><span>Identificación de 4+ indicadores clave</span></div>
+            </div>
+            <div class="crono-saving crono-saving-0">Ahorro acumulado: <strong>0%</strong></div>
+          </div>
+
+          <div class="crono-card crono-year1">
+            <div class="crono-year-badge">🟡 Año 1 · 2025–2026</div>
+            <h3 class="crono-title">Implantación tecnológica</h3>
+            <p class="crono-desc">Primeras medidas de bajo coste con alto impacto: automatización de equipos y reducción de agua.</p>
+            <div class="crono-actions">
+              <div class="crono-action"><span class="crono-dot crono-dot-y1"></span><span>⚡ Scripts GPO apagado automático aulas</span></div>
+              <div class="crono-action"><span class="crono-dot crono-dot-y1"></span><span>💧 Instalación aireadores y temporizadores</span></div>
+              <div class="crono-action"><span class="crono-dot crono-dot-y1"></span><span>📦 Inicio política paper-less en ASIX</span></div>
+              <div class="crono-action"><span class="crono-dot crono-dot-y1"></span><span>🧹 Transición a productos concentrados</span></div>
+            </div>
+            <div class="crono-saving crono-saving-1">Ahorro estimado año 1: <strong>−10%</strong></div>
+          </div>
+
+          <div class="crono-card crono-year2">
+            <div class="crono-year-badge">🟠 Año 2 · 2026–2027</div>
+            <h3 class="crono-title">Consolidación y expansión</h3>
+            <p class="crono-desc">Extensión de las medidas del año 1 a todo el centro y nuevas inversiones en infraestructura.</p>
+            <div class="crono-actions">
+              <div class="crono-action"><span class="crono-dot crono-dot-y2"></span><span>⚡ Sensores de presencia en iluminación</span></div>
+              <div class="crono-action"><span class="crono-dot crono-dot-y2"></span><span>💧 Cisternas de doble descarga (baños)</span></div>
+              <div class="crono-action"><span class="crono-dot crono-dot-y2"></span><span>📦 Política zero-paper en toda la FP</span></div>
+              <div class="crono-action"><span class="crono-dot crono-dot-y2"></span><span>🧹 Secadores de aire en baños principales</span></div>
+              <div class="crono-action"><span class="crono-dot crono-dot-y2"></span><span>💧 Monitorización nocturna anti-fugas activa</span></div>
+            </div>
+            <div class="crono-saving crono-saving-2">Ahorro estimado año 2: <strong>−20%</strong></div>
+          </div>
+
+          <div class="crono-card crono-year3">
+            <div class="crono-year-badge">🟢 Año 3 · 2027–2028</div>
+            <h3 class="crono-title">Objetivo 30% — Economía circular</h3>
+            <p class="crono-desc">Renovación de equipos obsoletos, compras centralizadas y aplicación de principios de economía circular.</p>
+            <div class="crono-actions">
+              <div class="crono-action"><span class="crono-dot crono-dot-y3"></span><span>⚡ Sustitución equipos &gt;8 años (Energy Star)</span></div>
+              <div class="crono-action"><span class="crono-dot crono-dot-y3"></span><span>📦 Compra centralizada y pedidos agrupados</span></div>
+              <div class="crono-action"><span class="crono-dot crono-dot-y3"></span><span>🔄 Reutilización piezas ordenadores viejos (RAEE)</span></div>
+              <div class="crono-action"><span class="crono-dot crono-dot-y3"></span><span>🧹 Garrafas a granel + reutilización envases</span></div>
+              <div class="crono-action"><span class="crono-dot crono-dot-y3"></span><span>📊 Auditoría de impacto y certificación ASG</span></div>
+            </div>
+            <div class="crono-saving crono-saving-3">Ahorro estimado año 3: <strong>−30% ✅ OBJETIVO</strong></div>
+          </div>
+        </div>
+
+        <div class="crono-projection">
+          <h4 class="chart-title" style="margin-bottom:16px">📈 Proyección de ahorro acumulado — 3 años</h4>
+          <canvas id="chart-crono" height="60"></canvas>
+          <p class="chart-note">La proyección usa los totales calculados automáticamente. Actualiza los indicadores para ver los valores reales.</p>
         </div>
       </div>
 
     </div>
   </section>
 
-  <!-- GRÁFICO RESUMEN GLOBAL -->
-  <section id="graficos" class="section section-dark">
-    <div class="container">
-      <span class="section-tag">📊 Resumen global</span>
-      <h2 class="section-title">Resumen de todos los consumos</h2>
-      <p class="section-desc">Comparativa visual de todos los indicadores. El resumen se actualiza automáticamente al calcular cada indicador.</p>
-      <div class="chart-wrapper">
-        <canvas id="chart-resumen" height="100"></canvas>
-      </div>
-      <div class="summary-cards" id="summary-cards">
-        <div class="sum-card"><span class="sum-icon">⚡</span><span class="sum-label">Electricidad/año</span><span class="sum-val" id="sum-elec">—</span></div>
-        <div class="sum-card"><span class="sum-icon">💧</span><span class="sum-label">Agua/año</span><span class="sum-val" id="sum-agua">—</span></div>
-        <div class="sum-card"><span class="sum-icon">📦</span><span class="sum-label">Consumibles/año</span><span class="sum-val" id="sum-cons">—</span></div>
-        <div class="sum-card"><span class="sum-icon">🧹</span><span class="sum-label">Limpieza/año</span><span class="sum-val" id="sum-limp">—</span></div>
-        <div class="sum-card"><span class="sum-icon">🔧</span><span class="sum-label">Mant.+Telecom/año</span><span class="sum-val" id="sum-categ">—</span></div>
-        <div class="sum-card sum-card-total"><span class="sum-icon">💶</span><span class="sum-label">Total estimado/año</span><span class="sum-val" id="sum-total">—</span></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- DATOS HISTÓRICOS -->
-  <section id="historico" class="section">
-    <div class="container">
-      <span class="section-tag">📂 ITB Leaks 2024 — Datos históricos</span>
-      <h2 class="section-title">Datos históricos extraídos de las facturas</h2>
-      <p class="section-desc">Valores del año 2024 que alimentan los cálculos de la calculadora. Obtenidos mediante <strong>data cleaning</strong> de los documentos ITB Leaks.</p>
-      <div class="data-grid">
-        <div class="info-card">
-          <div class="info-card-header">
-            <span class="info-card-icon">⚡</span>
-            <h3>Electricidad</h3>
-          </div>
-          <table class="info-table">
-            <thead><tr><th>Concepto</th><th>Importe</th></tr></thead>
-            <tbody>
-              <tr><td>Renovación QGP (may'24)</td><td>2.548,02 €</td></tr>
-              <tr><td>Mant. AACC urgente (jul'24)</td><td>348,48 €</td></tr>
-              <tr><td>Fibra DIGI (mensual)</td><td>30,00 €/mes</td></tr>
-              <tr><td>Fibra O2 (mensual)</td><td>38,00 €/mes</td></tr>
-            </tbody>
-          </table>
-          <p class="info-card-note">Base estimada: <strong>~4.200 kWh/mes</strong></p>
-        </div>
-        <div class="info-card">
-          <div class="info-card-header">
-            <span class="info-card-icon">💧</span>
-            <h3>Agua</h3>
-          </div>
-          <table class="info-table">
-            <thead><tr><th>Concepto</th><th>Importe</th></tr></thead>
-            <tbody>
-              <tr><td>Ciclo 1 (feb'24) — 57 m³</td><td>228,87 €</td></tr>
-              <tr><td>Ciclo 2 (abr'24) — 49 m³</td><td>198,39 €</td></tr>
-              <tr><td>Ciclo 3 (jun'24) — 68 m³</td><td>276,46 €</td></tr>
-            </tbody>
-          </table>
-          <p class="info-card-note">Media: <strong>~5.000 L/día lectivo</strong></p>
-        </div>
-        <div class="info-card">
-          <div class="info-card-header">
-            <span class="info-card-icon">📦</span>
-            <h3>Consumibles de oficina</h3>
-          </div>
-          <table class="info-table">
-            <thead><tr><th>Concepto</th><th>Importe</th></tr></thead>
-            <tbody>
-              <tr><td>Lyreco ene'24</td><td>59,96 €</td></tr>
-              <tr><td>Lyreco mar'24</td><td>48,93 €</td></tr>
-              <tr><td>Lyreco may'24</td><td>223,73 €</td></tr>
-              <tr><td>Lyreco jun'24</td><td>148,85 €</td></tr>
-              <tr><td>Lyreco set'24</td><td>116,56 €</td></tr>
-            </tbody>
-          </table>
-          <p class="info-card-note">Media mensual lectivo: <strong>~120 €/mes</strong></p>
-        </div>
-        <div class="info-card">
-          <div class="info-card-header">
-            <span class="info-card-icon">🧹</span>
-            <h3>Productos de limpieza</h3>
-          </div>
-          <table class="info-table">
-            <thead><tr><th>Concepto</th><th>Importe</th></tr></thead>
-            <tbody>
-              <tr><td>Neteges jun'24</td><td>750,26 €</td></tr>
-              <tr><td>Neteges may'24</td><td>454,72 €</td></tr>
-            </tbody>
-          </table>
-          <p class="info-card-note">Media mensual: <strong>~507 €/mes</strong></p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
   <footer class="site-footer-bottom">
     <div class="container">
       <p>© 2025 Institut Tecnològic de Barcelona · CFGS ASIX · Grup G8 · <strong>Fran Mendoza &amp; Rubén Mateos</strong></p>

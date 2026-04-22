@@ -67,7 +67,7 @@ const DIAS_LECTIVOS = [18, 19, 18, 18, 19, 15, 0, 0, 14, 21, 19, 10];
 const DIAS_BASE_AGOSTO = 31; // días del mes para consumo mínimo de sistemas
 
 // CONSUMIBLES
-// Juliol = 0: centre sense alumnes, NO es fan compres de material
+// Juliol = 0.25: profes al centre (reunions, memòries, preparació curs) → compres mínimes
 // Agost = 0: centre TANCAT, personal 0, compres 0
 const ESTAC_CONS = [
   0.85,  // 0  Enero     — Navidad (-15%), inicio 2.º trimestre
@@ -76,7 +76,7 @@ const ESTAC_CONS = [
   1.20,  // 3  Abril     — Evaluaciones finales 2.º trimestre
   1.15,  // 4  Mayo      — Preparación fin de curso
   0.75,  // 5  Junio     — Última semana sin alumnos (-25%)
-  0.00,  // 6  Julio     — Sin alumnos, sin compras de material
+  0.25,  // 6  Julio     — Solo profes (reuniones, memorias, preparación): compras mínimas ~30€
   0.00,  // 7  Agosto    — CERRADO. 0€ absoluto
   1.40,  // 8  Septiembre— PICO: inicio curso, compra masiva material
   1.10,  // 9  Octubre   — Normal actividad plena
@@ -245,7 +245,7 @@ function crearChart(id, labels, datasets, tipo = 'bar', unidad = '') {
 
 function colorElec(i) { return [10,11,0,1].includes(i)?'#79c0ff':i===7?'#555':i===6?'#ffa657':'#3fb950'; }
 function colorAgua(i) { return i===7?'#444':[5,6].includes(i)?'#39c5cf':'#58a6ff'; }
-function colorCons(i) { return (i===7||i===6)?'#3d3d3d':[8,2,3].includes(i)?'#e3b341':'#bc8cff'; }
+function colorCons(i) { return i===7?'#3d3d3d':i===6?'#6e7681':[8,2,3].includes(i)?'#e3b341':'#bc8cff'; }
 function colorLimp(i) { return i===7?'#3d3d3d':i===6?'#f78166':'#3fb950'; }
 
 function pillsEstrategias(...pills) {
@@ -275,6 +275,8 @@ function actualizarResumenGlobal() {
   if (values.length > 0) {
     crearChart('chart-resumen', labels, [{ label:'Coste estimado (€)', data:values, backgroundColor:colors, borderRadius:8, borderSkipped:false }], 'bar', '€');
   }
+  // Actualizar proyección cronograma si ya existe la función
+  if (typeof crearChartCronograma === 'function') setTimeout(crearChartCronograma, 50);
 }
 
 
@@ -721,7 +723,7 @@ window.addEventListener('load', () => {
     if (i===6) return parseFloat(((5000*ESTAC_AGUA[6]*20)/1000).toFixed(1));               // Julio: personal admin
     return parseFloat(((5000*ESTAC_AGUA[i]*(DIAS_LECTIVOS[i]||0))/1000).toFixed(1));
   }), backgroundColor:MESES.map((_,i)=>colorAgua(i)), borderRadius:6, borderSkipped:false}], 'bar', 'm³');
-  crearChart('chart-cons', labs, [{label:'Gasto mensual (€)', data:MESES.map((_,i)=>120*ESTAC_CONS[i]), backgroundColor:MESES.map((_,i)=>colorCons(i)), borderRadius:6, borderSkipped:false}], 'bar', '€');
+  crearChart('chart-cons', labs, [{label:'Gasto mensual (€)', data:MESES.map((_,i)=>parseFloat((120*ESTAC_CONS[i]).toFixed(2))), backgroundColor:MESES.map((_,i)=>colorCons(i)), borderRadius:6, borderSkipped:false}], 'bar', '€');
   crearChart('chart-limp', labs, [{label:'Gasto mensual (€)', data:MESES.map((_,i)=>507*ESTAC_LIMP[i]), backgroundColor:MESES.map((_,i)=>colorLimp(i)), borderRadius:6, borderSkipped:false}], 'bar', '€');
   crearChart('chart-categ', labs, Object.entries(CATEGORIAS_DESPESA).map(([,cat])=>({label:cat.label, data:MESES.map(()=>cat.base), backgroundColor:cat.color, borderRadius:4, borderSkipped:false})), 'bar', '€');
 
@@ -731,4 +733,32 @@ window.addEventListener('load', () => {
   calcularConsumibles();
   calcularLimpieza();
   calcularCategories();
+
+  // Cronograma chart inicial
+  crearChartCronograma();
 });
+
+
+// ─────────────────────────────────────────
+// CRONOGRAMA — Proyección 4 años
+// ─────────────────────────────────────────
+function crearChartCronograma() {
+  const total = Object.values(resultadosGlobales)
+    .filter(Boolean)
+    .reduce((s, r) => s + (r.total || 0), 0);
+
+  const base = total > 0 ? total : 8000; // fallback estimado si no hay cálculos
+  const años = ['2025 (base)', '2026 (Año 1 −10%)', '2027 (Año 2 −20%)', '2028 (Año 3 −30%)'];
+  const values = [base, base * 0.90, base * 0.80, base * 0.70];
+  const colors = ['#8b949e', '#e3b341', '#f78166', '#3fb950'];
+
+  crearChart('chart-crono', años, [{
+    label: 'Coste anual estimado (€)',
+    data: values,
+    backgroundColor: colors,
+    borderRadius: 8,
+    borderSkipped: false
+  }], 'bar', '€');
+}
+
+
