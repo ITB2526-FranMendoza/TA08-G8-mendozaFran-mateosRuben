@@ -44,29 +44,21 @@
       <h2 class="section-title">Calcula el consumo del ITB</h2>
       <p class="section-desc">Selecciona el indicador y el período. La calculadora aplica <strong>estacionalidad real</strong>, <strong>tendencias temporales</strong> y <strong>variabilidad mensual</strong> basadas en los datos históricos ITB 2024.</p>
 
-      <div class="global-apply-bar">
-        <div class="global-apply-info">
-          <span class="global-apply-icon">♻️</span>
-          <div>
-            <strong>Medidas de reducción globales</strong>
-            <p>Activa o desactiva todas las acciones disponibles para alcanzar el objetivo −30% en cada indicador.</p>
-          </div>
+      <div class="tab-bar-wrapper">
+        <p class="tab-scroll-hint">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          Desliza para ver todos los apartados
+        </p>
+        <div class="tab-bar">
+          <button class="tab-btn active" data-tab="elec">⚡ Electricidad</button>
+          <button class="tab-btn" data-tab="agua">💧 Agua</button>
+          <button class="tab-btn" data-tab="consumibles">📦 Consumibles</button>
+          <button class="tab-btn" data-tab="limpieza">🧹 Limpieza</button>
+          <button class="tab-btn" data-tab="categories">🔧 Mantenimiento</button>
+          <button class="tab-btn" data-tab="resumen">📊 Resumen</button>
+          <button class="tab-btn" data-tab="historico">📂 Datos históricos</button>
+          <button class="tab-btn" data-tab="cronograma">📅 Cronograma</button>
         </div>
-        <div class="global-apply-btns">
-          <button class="btn-apply-all" id="btn-apply-all" onclick="aplicarTodas()">✅ Implementar todas</button>
-          <button class="btn-remove-all" id="btn-remove-all" onclick="quitarTodas()" style="display:none">❌ Quitar todas</button>
-        </div>
-      </div>
-
-      <div class="tab-bar">
-        <button class="tab-btn active" data-tab="elec">⚡ Electricidad</button>
-        <button class="tab-btn" data-tab="agua">💧 Agua</button>
-        <button class="tab-btn" data-tab="consumibles">📦 Consumibles</button>
-        <button class="tab-btn" data-tab="limpieza">🧹 Limpieza</button>
-        <button class="tab-btn" data-tab="categories">🔧 Mantenimiento</button>
-        <button class="tab-btn" data-tab="resumen">📊 Resumen</button>
-        <button class="tab-btn" data-tab="historico">📂 Datos históricos</button>
-        <button class="tab-btn" data-tab="cronograma">📅 Cronograma</button>
       </div>
 
       <!-- ELECTRICIDAD -->
@@ -110,7 +102,11 @@
             <div class="inline-reduction">
               <div class="inline-red-header">
                 <span>♻️ Medidas de ahorro — Electricidad</span>
-                <span class="red-saving-total" id="elec-saving-display">Ahorro: <strong>0%</strong></span>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <span class="red-saving-total" id="elec-saving-display">Ahorro: <strong>0%</strong></span>
+                  <button class="btn-apply-section" id="btn-apply-elec" onclick="aplicarSeccion('elec')">✅ Aplicar todas</button>
+                  <button class="btn-remove-section" id="btn-remove-elec" onclick="quitarSeccion('elec')">❌ Desactivar</button>
+                </div>
               </div>
               <div class="red-actions">
                 <div class="red-action-apply"><div class="action-check-area">
@@ -191,7 +187,11 @@
             <div class="inline-reduction">
               <div class="inline-red-header">
                 <span>♻️ Medidas de ahorro — Agua</span>
-                <span class="red-saving-total" id="agua-saving-display">Ahorro: <strong>0%</strong></span>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <span class="red-saving-total" id="agua-saving-display">Ahorro: <strong>0%</strong></span>
+                  <button class="btn-apply-section" id="btn-apply-agua" onclick="aplicarSeccion('agua')">✅ Aplicar todas</button>
+                  <button class="btn-remove-section" id="btn-remove-agua" onclick="quitarSeccion('agua')">❌ Desactivar</button>
+                </div>
               </div>
               <div class="red-actions">
                 <div class="red-action-apply"><div class="action-check-area">
@@ -267,7 +267,11 @@
             <div class="inline-reduction">
               <div class="inline-red-header">
                 <span>♻️ Medidas de ahorro — Consumibles</span>
-                <span class="red-saving-total" id="cons-saving-display">Ahorro: <strong>0%</strong></span>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <span class="red-saving-total" id="cons-saving-display">Ahorro: <strong>0%</strong></span>
+                  <button class="btn-apply-section" id="btn-apply-cons" onclick="aplicarSeccion('cons')">✅ Aplicar todas</button>
+                  <button class="btn-remove-section" id="btn-remove-cons" onclick="quitarSeccion('cons')">❌ Desactivar</button>
+                </div>
               </div>
               <div class="red-actions">
                 <div class="red-action-apply"><div class="action-check-area">
@@ -345,7 +349,11 @@
             <div class="inline-reduction">
               <div class="inline-red-header">
                 <span>♻️ Medidas de ahorro — Limpieza</span>
-                <span class="red-saving-total" id="limp-saving-display">Ahorro: <strong>0%</strong></span>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <span class="red-saving-total" id="limp-saving-display">Ahorro: <strong>0%</strong></span>
+                  <button class="btn-apply-section" id="btn-apply-limp" onclick="aplicarSeccion('limp')">✅ Aplicar todas</button>
+                  <button class="btn-remove-section" id="btn-remove-limp" onclick="quitarSeccion('limp')">❌ Desactivar</button>
+                </div>
               </div>
               <div class="red-actions">
                 <div class="red-action-apply"><div class="action-check-area">
@@ -433,7 +441,7 @@
           <p>Los valores se actualizan automáticamente al calcular cada indicador. El resumen refleja el año completo con estacionalidad real.</p>
         </div>
         <div class="chart-wrapper" style="margin-top:24px">
-          <canvas id="chart-resumen" height="100"></canvas>
+          <canvas id="chart-resumen" class="resumen-chart-big"></canvas>
         </div>
         <div class="summary-cards" id="summary-cards">
           <div class="sum-card"><span class="sum-icon">⚡</span><span class="sum-label">Electricidad/año</span><span class="sum-val" id="sum-elec">—</span></div>

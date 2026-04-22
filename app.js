@@ -273,7 +273,33 @@ function actualizarResumenGlobal() {
   });
   document.getElementById('sum-total').textContent = total > 0 ? fmtEur(total) : '—';
   if (values.length > 0) {
-    crearChart('chart-resumen', labels, [{ label:'Coste estimado (€)', data:values, backgroundColor:colors, borderRadius:8, borderSkipped:false }], 'bar', '€');
+    if (charts['chart-resumen']) charts['chart-resumen'].destroy();
+    const ctx = document.getElementById('chart-resumen')?.getContext('2d');
+    if (ctx) {
+      charts['chart-resumen'] = new Chart(ctx, {
+        type: 'bar',
+        data: { labels, datasets: [{ label:'Coste estimado (€)', data:values, backgroundColor:colors, borderRadius:10, borderSkipped:false }] },
+        options: {
+          maintainAspectRatio: false,
+          responsive: true,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#161b22', borderColor: '#30363d', borderWidth: 1,
+              titleColor: '#e6edf3', bodyColor: '#8b949e',
+              callbacks: {
+                label: c => ' ' + c.parsed.y.toLocaleString('es-ES', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' €'
+              }
+            }
+          },
+          scales: {
+            x: { grid: { color: 'rgba(48,54,61,0.5)' }, ticks: { color: '#8b949e', font: { family: 'DM Sans', size: 13 } } },
+            y: { grid: { color: 'rgba(48,54,61,0.5)' }, ticks: { color: '#8b949e', font: { family: 'DM Sans', size: 12 },
+              callback: v => v.toLocaleString('es-ES') + ' €' } }
+          }
+        }
+      });
+    }
   }
   // Actualizar proyección cronograma si ya existe la función
   if (typeof crearChartCronograma === 'function') setTimeout(crearChartCronograma, 50);
@@ -360,7 +386,30 @@ function quitarTodas() {
 
 
 // ─────────────────────────────────────────
-// CÁLCULOS 1 y 2 — ELECTRICIDAD
+// APLICAR / QUITAR POR APARTADO
+// ─────────────────────────────────────────
+function aplicarSeccion(indicador) {
+  const ids = Object.keys(AHORROS[indicador]);
+  ids.forEach(id => { const el = document.getElementById(id); if (el) el.checked = true; });
+  aplicarAhorro(indicador);
+  const btnA = document.getElementById(`btn-apply-${indicador}`);
+  const btnR = document.getElementById(`btn-remove-${indicador}`);
+  if (btnA) btnA.style.display = 'none';
+  if (btnR) btnR.style.display = 'inline-flex';
+}
+
+function quitarSeccion(indicador) {
+  const ids = Object.keys(AHORROS[indicador]);
+  ids.forEach(id => { const el = document.getElementById(id); if (el) el.checked = false; });
+  aplicarAhorro(indicador);
+  const btnA = document.getElementById(`btn-apply-${indicador}`);
+  const btnR = document.getElementById(`btn-remove-${indicador}`);
+  if (btnA) btnA.style.display = 'inline-flex';
+  if (btnR) btnR.style.display = 'none';
+}
+
+
+
 // ─────────────────────────────────────────
 function calcularElectricidad() {
   const base     = parseFloat(document.getElementById('elec-base').value)   || 4200;
