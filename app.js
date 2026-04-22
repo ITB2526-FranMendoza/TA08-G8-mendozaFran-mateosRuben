@@ -223,12 +223,14 @@ function crearChart(id, labels, datasets, tipo = 'bar', unidad = '') {
   if (charts[id]) charts[id].destroy();
   const ctx = document.getElementById(id)?.getContext('2d');
   if (!ctx) return;
+  const isMobile = window.innerWidth < 600;
   charts[id] = new Chart(ctx, {
     type: tipo, data: { labels, datasets },
     options: {
       responsive: true,
+      maintainAspectRatio: false,
       plugins: {
-        legend: { labels: { color: '#8b949e', font: { family: 'DM Sans', size: 12 } } },
+        legend: { labels: { color: '#8b949e', font: { family: 'DM Sans', size: 12 }, boxWidth: 14 } },
         tooltip: {
           backgroundColor: '#161b22', borderColor: '#30363d', borderWidth: 1,
           titleColor: '#e6edf3', bodyColor: '#8b949e',
@@ -236,8 +238,23 @@ function crearChart(id, labels, datasets, tipo = 'bar', unidad = '') {
         }
       },
       scales: {
-        x: { grid: { color: 'rgba(48,54,61,0.5)' }, ticks: { color: '#8b949e', font: { family: 'Space Mono', size: 11 } } },
-        y: { grid: { color: 'rgba(48,54,61,0.5)' }, ticks: { color: '#8b949e', font: { family: 'DM Sans', size: 11 } } }
+        x: {
+          grid: { color: 'rgba(48,54,61,0.5)' },
+          ticks: {
+            color: '#8b949e',
+            font: { family: 'Space Mono', size: isMobile ? 9 : 11 },
+            maxRotation: isMobile ? 45 : 0,
+            minRotation: isMobile ? 45 : 0,
+          }
+        },
+        y: {
+          grid: { color: 'rgba(48,54,61,0.5)' },
+          ticks: {
+            color: '#8b949e',
+            font: { family: 'DM Sans', size: isMobile ? 9 : 11 },
+            maxTicksLimit: isMobile ? 5 : 8
+          }
+        }
       }
     }
   });
@@ -432,7 +449,18 @@ function calcularElectricidad() {
   const maxM = dataMeses.reduce((a,b) => a.kwh > b.kwh ? a : b);
   const minNoZero = dataMeses.filter(d=>d.kwh>50).reduce((a,b) => a.kwh < b.kwh ? a : b, dataMeses.filter(d=>d.kwh>50)[0]);
 
-  resultadosGlobales.elec = { total: totalEur };
+  resultadosGlobales.elec = {
+    total: totalEur,
+    totalKwh: parseFloat(totalKwh.toFixed(2)),
+    totalEur: parseFloat(totalEur.toFixed(2)),
+    label, base, precio,
+    meses: dataMeses.map(d => ({
+      mes: d.mes, m: d.m,
+      kwh: parseFloat(d.kwh.toFixed(2)),
+      eur: parseFloat((d.kwh * precio).toFixed(2)),
+      coef: ESTAC_ELEC[d.m]
+    }))
+  };
   document.getElementById('sum-elec').textContent = fmtEur(totalEur);
   actualizarResumenGlobal();
 
@@ -513,7 +541,20 @@ function calcularAgua() {
   const maxM = dataMeses.reduce((a,b) => a.litros > b.litros ? a : b);
   const minNoZero = dataMeses.filter(d=>d.litros>0).reduce((a,b)=>a.litros<b.litros?a:b, dataMeses.filter(d=>d.litros>0)[0]);
 
-  resultadosGlobales.agua = { total: totalEur };
+  resultadosGlobales.agua = {
+    total: totalEur,
+    totalLitros: parseFloat(totalLitros.toFixed(0)),
+    totalM3: parseFloat(totalM3.toFixed(2)),
+    totalEur: parseFloat(totalEur.toFixed(2)),
+    label, baseDia, precio,
+    meses: dataMeses.map(d => ({
+      mes: d.mes, m: d.m,
+      litros: parseFloat(d.litros.toFixed(0)),
+      m3: parseFloat((d.litros/1000).toFixed(3)),
+      eur: parseFloat((d.litros/1000 * precio).toFixed(2)),
+      coef: ESTAC_AGUA[d.m]
+    }))
+  };
   document.getElementById('sum-agua').textContent = fmtEur(totalEur);
   actualizarResumenGlobal();
 
@@ -583,7 +624,17 @@ function calcularConsumibles() {
   const maxM = dataMeses.reduce((a,b) => a.gasto > b.gasto ? a : b);
   const minNoZero = dataMeses.filter(d=>d.gasto>0).reduce((a,b)=>a.gasto<b.gasto?a:b, dataMeses.filter(d=>d.gasto>0)[0]);
 
-  resultadosGlobales.cons = { total: totalEur };
+  resultadosGlobales.cons = {
+    total: totalEur,
+    totalEur: parseFloat(totalEur.toFixed(2)),
+    label, base,
+    meses: dataMeses.map(d => ({
+      mes: d.mes, m: d.m,
+      gasto: parseFloat(d.gasto.toFixed(2)),
+      coef: ESTAC_CONS[d.m],
+      pct: totalEur > 0 ? parseFloat(((d.gasto/totalEur)*100).toFixed(1)) : 0
+    }))
+  };
   document.getElementById('sum-cons').textContent = fmtEur(totalEur);
   actualizarResumenGlobal();
 
@@ -652,7 +703,17 @@ function calcularLimpieza() {
   const maxM = dataMeses.reduce((a,b) => a.gasto > b.gasto ? a : b);
   const minNoZero = dataMeses.filter(d=>d.gasto>0).reduce((a,b)=>a.gasto<b.gasto?a:b, dataMeses.filter(d=>d.gasto>0)[0]);
 
-  resultadosGlobales.limp = { total: totalEur };
+  resultadosGlobales.limp = {
+    total: totalEur,
+    totalEur: parseFloat(totalEur.toFixed(2)),
+    label, base, actividad,
+    meses: dataMeses.map(d => ({
+      mes: d.mes, m: d.m,
+      gasto: parseFloat(d.gasto.toFixed(2)),
+      coef: ESTAC_LIMP[d.m],
+      pct: totalEur > 0 ? parseFloat(((d.gasto/totalEur)*100).toFixed(1)) : 0
+    }))
+  };
   document.getElementById('sum-limp').textContent = fmtEur(totalEur);
   actualizarResumenGlobal();
 
@@ -713,7 +774,17 @@ function calcularCategories() {
     return { cat, totalCat };
   });
 
-  resultadosGlobales.categ = { total: totalGlobal };
+  resultadosGlobales.categ = {
+    total: totalGlobal,
+    numMeses,
+    categorias: rows.map(({cat, totalCat}) => ({
+      label: cat.label,
+      descripcion: cat.descripcion,
+      base: cat.base,
+      fluctuacion: cat.fluctuacion,
+      total: parseFloat(totalCat.toFixed(2))
+    }))
+  };
   document.getElementById('sum-categ').textContent = fmtEur(totalGlobal);
   actualizarResumenGlobal();
 
@@ -785,6 +856,15 @@ window.addEventListener('load', () => {
 
   // Cronograma chart inicial
   crearChartCronograma();
+
+  // Redibuja los gráficos base si cambia el tamaño de pantalla (orientación móvil)
+  let _resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(_resizeTimer);
+    _resizeTimer = setTimeout(() => {
+      Object.values(charts).forEach(ch => { if (ch) ch.resize(); });
+    }, 200);
+  });
 });
 
 
@@ -811,3 +891,418 @@ function crearChartCronograma() {
 }
 
 
+
+// ═══════════════════════════════════════════════════════
+//  SISTEMA DE EXPORTACIÓN — ITB Calculadora
+// ═══════════════════════════════════════════════════════
+
+const EXPORT_CONTENT_HINTS = {
+  calculos:  'Tablas mensuales de electricidad, agua, consumibles, limpieza y categorías.',
+  analisis:  'Totales por indicador, medidas de ahorro activas y proyección cronograma.',
+  ambos:     'Incluye tanto los cálculos mensuales detallados como el análisis de ahorro.'
+};
+const EXPORT_FORMAT_HINTS = {
+  csv:  'Compatible con Excel, Google Sheets, LibreOffice Calc.',
+  json: 'Formato estructurado ideal para integrar en otras aplicaciones.',
+  txt:  'Informe de texto plano, fácil de leer y copiar.',
+  pdf:  'Documento imprimible con tablas y resumen de resultados.'
+};
+
+function updateExportHint() {
+  const fmt  = document.getElementById('export-format').value;
+  const cont = document.querySelector('input[name="export-content"]:checked').value;
+  document.getElementById('export-format-hint').textContent  = EXPORT_FORMAT_HINTS[fmt]  || '';
+  document.getElementById('export-content-hint').textContent = EXPORT_CONTENT_HINTS[cont] || '';
+  document.getElementById('btn-export-label').textContent = 'Descargar ' + fmt.toUpperCase();
+}
+
+document.querySelectorAll('input[name="export-content"]').forEach(r => {
+  r.addEventListener('change', updateExportHint);
+});
+
+function toggleExportPanel() {
+  const body    = document.getElementById('export-body');
+  const chevron = document.getElementById('export-chevron');
+  const header  = document.querySelector('.export-header');
+  const hidden  = body.hidden;
+  body.hidden   = !hidden;
+  chevron.classList.toggle('export-chevron-open', hidden);
+  header.setAttribute('aria-expanded', hidden ? 'true' : 'false');
+}
+
+function downloadFile(content, filename, mimeType) {
+  const blob = new Blob([content], { type: mimeType });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function buildAnalisis() {
+  const ahorrosActivos = {};
+  ['elec','agua','cons','limp'].forEach(ind => {
+    const activos = [];
+    Object.entries(AHORROS[ind]).forEach(([id, pct]) => {
+      if (document.getElementById(id)?.checked) activos.push({ id, pct });
+    });
+    const totalPct = Math.min(activos.reduce((s,a) => s + a.pct, 0), 30);
+    ahorrosActivos[ind] = { medidas: activos, totalPct };
+  });
+  const totales = {
+    electricidad: resultadosGlobales.elec  ? parseFloat((resultadosGlobales.elec.totalEur||0).toFixed(2))  : null,
+    agua:         resultadosGlobales.agua  ? parseFloat((resultadosGlobales.agua.totalEur||0).toFixed(2))  : null,
+    consumibles:  resultadosGlobales.cons  ? parseFloat((resultadosGlobales.cons.totalEur||0).toFixed(2))  : null,
+    limpieza:     resultadosGlobales.limp  ? parseFloat((resultadosGlobales.limp.totalEur||0).toFixed(2))  : null,
+    categorias:   resultadosGlobales.categ ? parseFloat((resultadosGlobales.categ.total||0).toFixed(2))    : null
+  };
+  const totalGlobal = Object.values(totales).reduce((s,v) => s + (v||0), 0);
+  const proyeccion = [
+    { año: '2025 (base)',        coste: parseFloat(totalGlobal.toFixed(2)),          ahorro: 0  },
+    { año: '2026 (Año 1 −10%)', coste: parseFloat((totalGlobal*0.90).toFixed(2)),   ahorro: 10 },
+    { año: '2027 (Año 2 −20%)', coste: parseFloat((totalGlobal*0.80).toFixed(2)),   ahorro: 20 },
+    { año: '2028 (Año 3 −30%)', coste: parseFloat((totalGlobal*0.70).toFixed(2)),   ahorro: 30 }
+  ];
+  return { totales, totalGlobal: parseFloat(totalGlobal.toFixed(2)), ahorrosActivos, proyeccion };
+}
+
+// ── CSV ───────────────────────────────────────────────
+function exportCSV(contenido) {
+  const sep = ';';
+  const rows = [];
+
+  if (contenido === 'calculos' || contenido === 'ambos') {
+    rows.push(['=== CÁLCULOS DETALLADOS — ITB Calculadora ===']);
+    rows.push([]);
+    if (resultadosGlobales.elec?.meses) {
+      const e = resultadosGlobales.elec;
+      rows.push(['ELECTRICIDAD — ' + e.label]);
+      rows.push(['Base mensual (kWh)', e.base, 'Precio kWh (€)', e.precio]);
+      rows.push(['Mes','kWh','Coste (€)','Coef.']);
+      e.meses.forEach(m => rows.push([m.mes, m.kwh, m.eur, m.coef]));
+      rows.push(['TOTAL', e.totalKwh, e.totalEur, '']); rows.push([]);
+    }
+    if (resultadosGlobales.agua?.meses) {
+      const a = resultadosGlobales.agua;
+      rows.push(['AGUA — ' + a.label]);
+      rows.push(['Base diaria (L)', a.baseDia, 'Precio m³ (€)', a.precio]);
+      rows.push(['Mes','Litros','m³','Coste (€)','Coef.']);
+      a.meses.forEach(m => rows.push([m.mes, m.litros, m.m3, m.eur, m.coef]));
+      rows.push(['TOTAL', a.totalLitros, a.totalM3, a.totalEur, '']); rows.push([]);
+    }
+    if (resultadosGlobales.cons?.meses) {
+      const c = resultadosGlobales.cons;
+      rows.push(['CONSUMIBLES — ' + c.label]);
+      rows.push(['Base mensual (€)', c.base]);
+      rows.push(['Mes','Gasto (€)','Coef.','% Total']);
+      c.meses.forEach(m => rows.push([m.mes, m.gasto, m.coef, m.pct+'%']));
+      rows.push(['TOTAL', c.totalEur, '', '100%']); rows.push([]);
+    }
+    if (resultadosGlobales.limp?.meses) {
+      const l = resultadosGlobales.limp;
+      rows.push(['LIMPIEZA — ' + l.label]);
+      rows.push(['Base mensual (€)', l.base, 'Actividad', l.actividad]);
+      rows.push(['Mes','Gasto (€)','Coef.','% Total']);
+      l.meses.forEach(m => rows.push([m.mes, m.gasto, m.coef, m.pct+'%']));
+      rows.push(['TOTAL', l.totalEur, '', '100%']); rows.push([]);
+    }
+    if (resultadosGlobales.categ?.categorias) {
+      const cat = resultadosGlobales.categ;
+      rows.push(['CATEGORÍAS FIJAS — ' + cat.numMeses + ' meses']);
+      rows.push(['Categoría','Base mensual (€)','Fluctuación (%)','Total (€)']);
+      cat.categorias.forEach(c => rows.push([c.label, c.base, (c.fluctuacion*100).toFixed(0)+'%', c.total]));
+      rows.push(['TOTAL','','', parseFloat(cat.total.toFixed(2))]); rows.push([]);
+    }
+  }
+
+  if (contenido === 'analisis' || contenido === 'ambos') {
+    const an = buildAnalisis();
+    rows.push(['=== ANÁLISIS Y RESUMEN — ITB Calculadora ===']); rows.push([]);
+    rows.push(['TOTALES POR INDICADOR']);
+    rows.push(['Indicador','Total (€)']);
+    rows.push(['Electricidad', an.totales.electricidad ?? 'Sin datos']);
+    rows.push(['Agua',         an.totales.agua         ?? 'Sin datos']);
+    rows.push(['Consumibles',  an.totales.consumibles  ?? 'Sin datos']);
+    rows.push(['Limpieza',     an.totales.limpieza     ?? 'Sin datos']);
+    rows.push(['Categorías',   an.totales.categorias   ?? 'Sin datos']);
+    rows.push(['TOTAL GLOBAL', an.totalGlobal]); rows.push([]);
+    rows.push(['MEDIDAS DE AHORRO ACTIVAS']);
+    rows.push(['Indicador','Ahorro total (%)','Ahorro en euros (€)']);
+    ['elec','agua','cons','limp'].forEach(ind => {
+      const a = an.ahorrosActivos[ind];
+      const base = an.totales[{elec:'electricidad',agua:'agua',cons:'consumibles',limp:'limpieza'}[ind]];
+      const euros = base != null ? parseFloat((base * a.totalPct / 100).toFixed(2)) : 'Sin datos';
+      rows.push([ind.toUpperCase(), a.totalPct+'%', euros]);
+    });
+    rows.push([]); rows.push(['PROYECCIÓN CRONOGRAMA — 4 AÑOS']);
+    rows.push(['Año','Coste estimado (€)','Ahorro acumulado (%)']);
+    an.proyeccion.forEach(p => rows.push([p.año, p.coste, p.ahorro+'%']));
+    rows.push([]); rows.push(['Generado por ITB Calculadora · ' + new Date().toLocaleDateString('es-ES')]);
+  }
+
+  const csv = rows.map(r => r.join(sep)).join('\n');
+  downloadFile('\uFEFF' + csv, 'ITB_Exportacion_' + new Date().toISOString().slice(0,10) + '.csv', 'text/csv;charset=utf-8');
+}
+
+// ── JSON ──────────────────────────────────────────────
+function exportJSON(contenido) {
+  const obj = {
+    meta: {
+      generado: new Date().toISOString(),
+      fuente: 'ITB Calculadora d\'Estalvi Energètic',
+      autores: 'Fran Mendoza & Rubén Mateos · CFGS ASIX G8',
+      contenido
+    }
+  };
+  if (contenido === 'calculos' || contenido === 'ambos') {
+    obj.calculos = {
+      electricidad: resultadosGlobales.elec  || null,
+      agua:         resultadosGlobales.agua  || null,
+      consumibles:  resultadosGlobales.cons  || null,
+      limpieza:     resultadosGlobales.limp  || null,
+      categorias:   resultadosGlobales.categ || null
+    };
+  }
+  if (contenido === 'analisis' || contenido === 'ambos') {
+    obj.analisis = buildAnalisis();
+  }
+  downloadFile(JSON.stringify(obj, null, 2), 'ITB_Exportacion_' + new Date().toISOString().slice(0,10) + '.json', 'application/json');
+}
+
+// ── TXT ───────────────────────────────────────────────
+function exportTXT(contenido) {
+  const L = '\n';
+  const H = t => '═'.repeat(60)+L+t.toUpperCase()+L+'═'.repeat(60)+L;
+  const h = t => L+'── '+t+' '+'─'.repeat(Math.max(0,54-t.length))+L;
+  const r = (label,val) => '  '+label.padEnd(32)+' '+val+L;
+  let out = '';
+
+  out += H('ITB Calculadora d\'Estalvi Energètic');
+  out += r('Institut Tecnològic de Barcelona','');
+  out += r('CFGS ASIX · Grup G8','Fran Mendoza & Rubén Mateos');
+  out += r('Fecha de generación', new Date().toLocaleString('es-ES'));
+  out += r('Contenido exportado', contenido.toUpperCase());
+  out += L;
+
+  if (contenido === 'calculos' || contenido === 'ambos') {
+    out += H('Cálculos detallados');
+    if (resultadosGlobales.elec?.meses) {
+      const e = resultadosGlobales.elec;
+      out += h('Electricidad — '+e.label);
+      out += r('Base mensual', e.base+' kWh'); out += r('Precio kWh', e.precio+' €');
+      out += L+'  '+('Mes').padEnd(14)+('kWh').padStart(10)+('Coste €').padStart(12)+('Coef.').padStart(7)+L;
+      out += '  '+'-'.repeat(45)+L;
+      e.meses.forEach(m => { out += '  '+m.mes.padEnd(14)+String(m.kwh).padStart(10)+fmtEur(m.eur).padStart(12)+String(m.coef).padStart(7)+L; });
+      out += '  '+'-'.repeat(45)+L;
+      out += '  '+('TOTAL').padEnd(14)+String(e.totalKwh).padStart(10)+fmtEur(e.totalEur).padStart(12)+L+L;
+    }
+    if (resultadosGlobales.agua?.meses) {
+      const a = resultadosGlobales.agua;
+      out += h('Agua — '+a.label);
+      out += r('Base diaria', a.baseDia+' L/día'); out += r('Precio m³', a.precio+' €');
+      out += L+'  '+('Mes').padEnd(14)+('Litros').padStart(10)+('m³').padStart(8)+('Coste €').padStart(12)+L;
+      out += '  '+'-'.repeat(46)+L;
+      a.meses.forEach(m => { out += '  '+m.mes.padEnd(14)+String(m.litros).padStart(10)+String(m.m3).padStart(8)+fmtEur(m.eur).padStart(12)+L; });
+      out += '  '+'-'.repeat(46)+L;
+      out += '  '+('TOTAL').padEnd(14)+String(a.totalLitros).padStart(10)+String(a.totalM3).padStart(8)+fmtEur(a.totalEur).padStart(12)+L+L;
+    }
+    if (resultadosGlobales.cons?.meses) {
+      const c = resultadosGlobales.cons;
+      out += h('Consumibles — '+c.label);
+      out += r('Base mensual', c.base+' €');
+      out += L+'  '+('Mes').padEnd(14)+('Gasto €').padStart(12)+('Coef.').padStart(7)+('% Total').padStart(8)+L;
+      out += '  '+'-'.repeat(43)+L;
+      c.meses.forEach(m => { out += '  '+m.mes.padEnd(14)+fmtEur(m.gasto).padStart(12)+String(m.coef).padStart(7)+String(m.pct+'%').padStart(8)+L; });
+      out += '  '+'-'.repeat(43)+L;
+      out += '  '+('TOTAL').padEnd(14)+fmtEur(c.totalEur).padStart(12)+L+L;
+    }
+    if (resultadosGlobales.limp?.meses) {
+      const l = resultadosGlobales.limp;
+      out += h('Limpieza — '+l.label);
+      out += r('Base mensual', l.base+' €'); out += r('Nivel actividad', l.actividad);
+      out += L+'  '+('Mes').padEnd(14)+('Gasto €').padStart(12)+('Coef.').padStart(7)+('% Total').padStart(8)+L;
+      out += '  '+'-'.repeat(43)+L;
+      l.meses.forEach(m => { out += '  '+m.mes.padEnd(14)+fmtEur(m.gasto).padStart(12)+String(m.coef).padStart(7)+String(m.pct+'%').padStart(8)+L; });
+      out += '  '+'-'.repeat(43)+L;
+      out += '  '+('TOTAL').padEnd(14)+fmtEur(l.totalEur).padStart(12)+L+L;
+    }
+    if (resultadosGlobales.categ?.categorias) {
+      const cat = resultadosGlobales.categ;
+      out += h('Categorías fijas — '+cat.numMeses+' meses');
+      cat.categorias.forEach(c => { out += r(c.label, fmtEur(c.total)+' (base '+fmtEur(c.base)+'/mes)'); });
+      out += r('TOTAL CATEGORÍAS', fmtEur(cat.total)); out += L;
+    }
+  }
+
+  if (contenido === 'analisis' || contenido === 'ambos') {
+    const an = buildAnalisis();
+    out += H('Análisis y Resumen');
+    out += h('Totales por indicador');
+    out += r('Electricidad',  an.totales.electricidad != null ? fmtEur(an.totales.electricidad) : 'Sin datos');
+    out += r('Agua',          an.totales.agua         != null ? fmtEur(an.totales.agua)         : 'Sin datos');
+    out += r('Consumibles',   an.totales.consumibles  != null ? fmtEur(an.totales.consumibles)  : 'Sin datos');
+    out += r('Limpieza',      an.totales.limpieza     != null ? fmtEur(an.totales.limpieza)     : 'Sin datos');
+    out += r('Categorías',    an.totales.categorias   != null ? fmtEur(an.totales.categorias)   : 'Sin datos');
+    out += r('TOTAL GLOBAL',  fmtEur(an.totalGlobal)); out += L;
+    out += h('Medidas de ahorro activas');
+    ['elec','agua','cons','limp'].forEach(ind => {
+      const a = an.ahorrosActivos[ind];
+      const base = an.totales[{elec:'electricidad',agua:'agua',cons:'consumibles',limp:'limpieza'}[ind]];
+      const euros = base != null ? fmtEur(base * a.totalPct / 100) : 'Sin datos';
+      out += r(ind.toUpperCase()+' ('+a.totalPct+'%)', 'Ahorro: '+euros);
+    });
+    out += h('Proyección cronograma — 4 años');
+    an.proyeccion.forEach(p => { out += r(p.año, fmtEur(p.coste)+'  (−'+p.ahorro+'%)'); });
+    out += L;
+  }
+
+  out += L+'─'.repeat(60)+L;
+  out += 'Generado por ITB Calculadora d\'Estalvi Energètic'+L;
+  out += 'TA08 · Mòdul 1708 Sostenibilitat · Curs 25/26'+L;
+  downloadFile(out, 'ITB_Exportacion_' + new Date().toISOString().slice(0,10) + '.txt', 'text/plain;charset=utf-8');
+}
+
+// ── PDF ───────────────────────────────────────────────
+function exportPDF(contenido) {
+  const { jsPDF } = window.jspdf;
+  if (!jsPDF) { alert('Librería PDF no disponible. Prueba en un momento.'); return; }
+
+  const doc = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
+  const PW=210, ML=14, MR=14, TW=PW-ML-MR;
+  let y = 18;
+
+  const addPageIfNeeded = (n=20) => { if (y+n > 280) { doc.addPage(); y=18; } };
+
+  // Cabecera
+  doc.setFillColor(13,17,23); doc.rect(0,0,PW,28,'F');
+  doc.setTextColor(63,185,80); doc.setFontSize(15); doc.setFont('helvetica','bold');
+  doc.text('ITB · Calculadora d\'Estalvi Energètic', ML, 11);
+  doc.setTextColor(139,148,158); doc.setFontSize(8); doc.setFont('helvetica','normal');
+  doc.text('CFGS ASIX · Grup G8 · Fran Mendoza & Rubén Mateos · TA08 Sostenibilitat', ML, 17);
+  doc.text('Exportación: '+contenido.toUpperCase()+' · Generado: '+new Date().toLocaleString('es-ES'), ML, 22);
+  y = 34;
+
+  const secTitle = (title, color) => {
+    addPageIfNeeded(14);
+    doc.setFillColor(22,27,34); doc.rect(ML,y-5,TW,10,'F');
+    doc.setTextColor(...(color||[88,166,255])); doc.setFontSize(11); doc.setFont('helvetica','bold');
+    doc.text(title, ML+2, y+1); y+=8;
+  };
+  const subT = (t) => {
+    addPageIfNeeded(10);
+    doc.setTextColor(230,237,243); doc.setFontSize(9); doc.setFont('helvetica','bold');
+    doc.text(t, ML, y); y+=6;
+  };
+  const addTbl = (head, body, colStyles) => {
+    addPageIfNeeded(20);
+    doc.autoTable({
+      startY: y, head:[head], body,
+      margin:{left:ML,right:MR},
+      styles:{fontSize:8,cellPadding:2.5,textColor:[230,237,243],fillColor:[22,27,34],lineColor:[48,54,61],lineWidth:0.2},
+      headStyles:{fillColor:[28,33,40],textColor:[139,148,158],fontStyle:'bold',fontSize:8},
+      alternateRowStyles:{fillColor:[16,21,28]},
+      columnStyles:colStyles||{}, theme:'grid'
+    });
+    y = doc.lastAutoTable.finalY + 6;
+  };
+
+  if (contenido === 'calculos' || contenido === 'ambos') {
+    secTitle('CÁLCULOS DETALLADOS', [88,166,255]);
+    if (resultadosGlobales.elec?.meses) {
+      const e = resultadosGlobales.elec;
+      subT('⚡ Electricidad — '+e.label+' (Base: '+e.base+' kWh · Precio: '+e.precio+' €/kWh)');
+      addTbl(['Mes','kWh','Coste (€)','Coef.'],
+        [...e.meses.map(m=>[m.mes,m.kwh,fmtEur(m.eur),m.coef]),['TOTAL',e.totalKwh,fmtEur(e.totalEur),'']],
+        {1:{halign:'right'},2:{halign:'right'},3:{halign:'right'}});
+    }
+    if (resultadosGlobales.agua?.meses) {
+      const a = resultadosGlobales.agua;
+      subT('💧 Agua — '+a.label+' (Base: '+a.baseDia+' L/día · Precio: '+a.precio+' €/m³)');
+      addTbl(['Mes','Litros','m³','Coste (€)','Coef.'],
+        [...a.meses.map(m=>[m.mes,m.litros,m.m3,fmtEur(m.eur),m.coef]),['TOTAL',a.totalLitros,a.totalM3,fmtEur(a.totalEur),'']],
+        {1:{halign:'right'},2:{halign:'right'},3:{halign:'right'},4:{halign:'right'}});
+    }
+    if (resultadosGlobales.cons?.meses) {
+      const c = resultadosGlobales.cons;
+      subT('📦 Consumibles — '+c.label+' (Base: '+c.base+' €/mes)');
+      addTbl(['Mes','Gasto (€)','Coef.','% Total'],
+        [...c.meses.map(m=>[m.mes,fmtEur(m.gasto),m.coef,m.pct+'%']),['TOTAL',fmtEur(c.totalEur),'','100%']],
+        {1:{halign:'right'},2:{halign:'right'},3:{halign:'right'}});
+    }
+    if (resultadosGlobales.limp?.meses) {
+      const l = resultadosGlobales.limp;
+      subT('🧹 Limpieza — '+l.label+' (Base: '+l.base+' €/mes · Actividad: '+l.actividad+')');
+      addTbl(['Mes','Gasto (€)','Coef.','% Total'],
+        [...l.meses.map(m=>[m.mes,fmtEur(m.gasto),m.coef,m.pct+'%']),['TOTAL',fmtEur(l.totalEur),'','100%']],
+        {1:{halign:'right'},2:{halign:'right'},3:{halign:'right'}});
+    }
+    if (resultadosGlobales.categ?.categorias) {
+      const cat = resultadosGlobales.categ;
+      subT('🔧 Categorías fijas — '+cat.numMeses+' meses');
+      addTbl(['Categoría','Base €/mes','Fluctuación','Total (€)'],
+        [...cat.categorias.map(c=>[c.label,fmtEur(c.base),(c.fluctuacion*100).toFixed(0)+'%',fmtEur(c.total)]),['TOTAL','','',fmtEur(cat.total)]],
+        {1:{halign:'right'},3:{halign:'right'}});
+    }
+  }
+
+  if (contenido === 'analisis' || contenido === 'ambos') {
+    const an = buildAnalisis();
+    if (contenido === 'ambos') { doc.addPage(); y=18; }
+    secTitle('ANÁLISIS Y RESUMEN', [63,185,80]);
+    subT('Totales por indicador');
+    addTbl(['Indicador','Total estimado (€)'],[
+      ['⚡ Electricidad',  an.totales.electricidad!=null ? fmtEur(an.totales.electricidad) : '—'],
+      ['💧 Agua',          an.totales.agua        !=null ? fmtEur(an.totales.agua)         : '—'],
+      ['📦 Consumibles',   an.totales.consumibles !=null ? fmtEur(an.totales.consumibles)  : '—'],
+      ['🧹 Limpieza',      an.totales.limpieza    !=null ? fmtEur(an.totales.limpieza)     : '—'],
+      ['🔧 Categorías',    an.totales.categorias  !=null ? fmtEur(an.totales.categorias)   : '—'],
+      ['TOTAL GLOBAL', fmtEur(an.totalGlobal)]
+    ], {1:{halign:'right'}});
+    subT('Medidas de ahorro activas');
+    addTbl(['Indicador','Ahorro (%)','Ahorro estimado (€)'],
+      ['elec','agua','cons','limp'].map(ind => {
+        const a = an.ahorrosActivos[ind];
+        const base = an.totales[{elec:'electricidad',agua:'agua',cons:'consumibles',limp:'limpieza'}[ind]];
+        const euros = base!=null ? fmtEur(base*a.totalPct/100) : '—';
+        const names = {elec:'⚡ Electricidad',agua:'💧 Agua',cons:'📦 Consumibles',limp:'🧹 Limpieza'};
+        return [names[ind], a.totalPct+'%', euros];
+      }), {1:{halign:'center'},2:{halign:'right'}});
+    subT('Proyección cronograma — 4 años');
+    addTbl(['Año','Coste estimado (€)','Ahorro acumulado'],
+      an.proyeccion.map(p=>[p.año, fmtEur(p.coste), '−'+p.ahorro+'%']),
+      {1:{halign:'right'},2:{halign:'center'}});
+  }
+
+  const totalPages = doc.getNumberOfPages();
+  for (let i=1; i<=totalPages; i++) {
+    doc.setPage(i);
+    doc.setFillColor(13,17,23); doc.rect(0,287,PW,10,'F');
+    doc.setTextColor(139,148,158); doc.setFontSize(7);
+    doc.text('ITB Calculadora d\'Estalvi Energètic · ASIX G8 · Mendoza & Mateos', ML, 293);
+    doc.text('Pàgina '+i+' de '+totalPages, PW-MR, 293, {align:'right'});
+  }
+  doc.save('ITB_Exportacion_' + new Date().toISOString().slice(0,10) + '.pdf');
+}
+
+// ── Dispatcher ────────────────────────────────────────
+function ejecutarExport() {
+  const fmt       = document.getElementById('export-format').value;
+  const contenido = document.querySelector('input[name="export-content"]:checked').value;
+  const status    = document.getElementById('export-status');
+  status.innerHTML = '<span style="color:var(--accent4)">⏳ Generando archivo...</span>';
+  setTimeout(() => {
+    try {
+      if      (fmt==='csv')  exportCSV(contenido);
+      else if (fmt==='json') exportJSON(contenido);
+      else if (fmt==='txt')  exportTXT(contenido);
+      else if (fmt==='pdf')  exportPDF(contenido);
+      status.innerHTML = '<span style="color:var(--accent)">✅ ¡Archivo descargado!</span>';
+    } catch(err) {
+      console.error('Export error:', err);
+      status.innerHTML = '<span style="color:var(--accent3)">❌ Error al generar el archivo</span>';
+    }
+    setTimeout(() => { status.innerHTML = ''; }, 4000);
+  }, 50);
+}

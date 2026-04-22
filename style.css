@@ -196,10 +196,7 @@ input, select, button { font-family: var(--font-body); }
 }
 .btn-remove-section:hover { background: var(--accent3); color: #000; border-color: var(--accent3); }
 
-/* Resumen global — canvas más grande */
-.resumen-chart-big { height: 340px !important; }
-@media (max-width: 768px) { .resumen-chart-big { height: 260px !important; } }
-@media (max-width: 480px) { .resumen-chart-big { height: 200px !important; } }
+/* Resumen global — altura gestionada en .chart-wrapper canvas */
 
 /* ── Results box ── */
 .calc-results { background: var(--bg-card2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; min-height: 300px; display: flex; align-items: stretch; }
@@ -234,9 +231,42 @@ input, select, button { font-family: var(--font-body); }
 .strat-c { background: rgba(188,140,255,.1); border-color: rgba(188,140,255,.35); color: #bc8cff; }
 
 /* ── Chart wrapper ── */
-.chart-wrapper { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; margin-top: 0; }
+.chart-wrapper {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 24px; margin-top: 0;
+}
+/* Todos los canvas dentro de chart-wrapper tienen altura controlada */
+.chart-wrapper canvas {
+  display: block;
+  height: 280px !important;
+  width: 100% !important;
+}
+/* Resumen más alto */
+.chart-wrapper canvas#chart-resumen,
+.chart-wrapper canvas.resumen-chart-big {
+  height: 340px !important;
+}
+/* Cronograma igual */
+.chart-wrapper canvas#chart-crono {
+  height: 260px !important;
+}
 .chart-title { font-family: var(--font-mono); font-size: 13px; color: var(--text); margin-bottom: 16px; }
-.chart-note { font-size: 12px; color: var(--text-muted); margin-top: 12px; }
+.chart-note { font-size: 12px; color: var(--text-muted); margin-top: 12px; line-height: 1.6; }
+
+@media (max-width: 768px) {
+  .chart-wrapper { padding: 16px; }
+  .chart-wrapper canvas          { height: 240px !important; }
+  .chart-wrapper canvas#chart-resumen,
+  .chart-wrapper canvas.resumen-chart-big { height: 260px !important; }
+  .chart-wrapper canvas#chart-crono       { height: 200px !important; }
+}
+@media (max-width: 480px) {
+  .chart-wrapper { padding: 12px; }
+  .chart-wrapper canvas          { height: 200px !important; }
+  .chart-wrapper canvas#chart-resumen,
+  .chart-wrapper canvas.resumen-chart-big { height: 210px !important; }
+  .chart-wrapper canvas#chart-crono       { height: 180px !important; }
+}
 
 /* ── Summary section ── */
 .summary-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-top: 28px; }
@@ -638,3 +668,229 @@ input, select, button { font-family: var(--font-body); }
 }
 .btn-remove-all:hover { background: var(--accent3); color: #000; border-color: var(--accent3); }
 .global-apply-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* ═══════════════════════════════════════════════════════
+   PANEL DE EXPORTACIÓN
+   ═══════════════════════════════════════════════════════ */
+
+.export-wrap {
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  padding: 0 24px;
+}
+
+/* ── Cabecera toggle ──────────────────────────────────── */
+.export-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 18px 0;
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 14px;
+  text-align: left;
+  transition: color .2s;
+}
+.export-header:hover { color: var(--accent2); }
+.export-header:hover .export-chevron { color: var(--accent2); }
+
+.export-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.export-icon-wrap {
+  font-size: 18px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.export-title {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+  color: var(--text);
+  display: block;
+  line-height: 1.3;
+}
+.export-subtitle {
+  font-size: 12px;
+  color: var(--text-muted);
+  display: block;
+  margin-top: 2px;
+}
+
+.export-chevron {
+  font-size: 12px;
+  color: var(--text-muted);
+  transition: transform .25s ease, color .2s;
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+}
+.export-chevron-open {
+  transform: rotate(180deg);
+  color: var(--accent2);
+}
+
+/* ── Cuerpo ─────────────────────────────────────────── */
+.export-body {
+  padding: 0 0 28px;
+  animation: exportFadeIn .2s ease;
+}
+@keyframes exportFadeIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Grid de columnas ────────────────────────────────── */
+.export-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 20px 28px;
+  align-items: start;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 22px 24px;
+  margin-bottom: 12px;
+}
+@media (max-width: 680px) {
+  .export-grid { grid-template-columns: 1fr; }
+  .export-col-btn { justify-self: stretch; }
+}
+
+.export-col-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.export-col-hint {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 8px;
+  line-height: 1.5;
+  min-height: 32px;
+}
+
+/* ── Pills de contenido ──────────────────────────────── */
+.export-pills {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.export-pill {
+  cursor: pointer;
+  display: flex;
+}
+.export-pill input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.export-pill span {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid var(--border-light);
+  color: var(--text-muted);
+  background: var(--bg-card2);
+  transition: all .18s ease;
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+}
+.export-pill input:checked + span {
+  background: rgba(88,166,255,.15);
+  border-color: var(--accent2);
+  color: var(--accent2);
+}
+.export-pill:hover span {
+  border-color: var(--accent2);
+  color: var(--text);
+}
+
+/* ── Select de formato ───────────────────────────────── */
+.export-format-row { display: flex; align-items: center; }
+.export-select {
+  width: 100%;
+  background: var(--bg-card2);
+  border: 1px solid var(--border-light);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 13px;
+  padding: 9px 36px 9px 12px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238b949e' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  transition: border-color .18s;
+}
+.export-select:hover { border-color: var(--accent2); }
+.export-select:focus { outline: none; border-color: var(--accent2); box-shadow: 0 0 0 3px rgba(88,166,255,.15); }
+.export-select option { background: var(--bg-card2); }
+
+/* ── Botón descargar ─────────────────────────────────── */
+.export-col-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  padding-top: 20px;
+}
+.btn-export-download {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: linear-gradient(135deg, rgba(88,166,255,.18), rgba(63,185,80,.14));
+  border: 1px solid var(--accent2);
+  color: var(--accent2);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 11px 22px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all .2s ease;
+  white-space: nowrap;
+}
+.btn-export-download:hover {
+  background: rgba(88,166,255,.25);
+  box-shadow: 0 4px 16px rgba(88,166,255,.2);
+  transform: translateY(-1px);
+}
+.btn-export-download:active { transform: translateY(0); }
+
+.export-dl-icon {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* ── Nota inferior ───────────────────────────────────── */
+.export-note {
+  font-size: 11px;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border);
+  padding-top: 10px;
+  line-height: 1.6;
+}
+.export-note em { color: var(--accent4); font-style: normal; }

@@ -586,6 +586,86 @@
     </div>
   </section>
 
+  <!-- ══════════════════════════════════════════
+       PANEL DE EXPORTACIÓN — al final de la página
+       ══════════════════════════════════════════ -->
+  <section class="export-wrap" id="export-section">
+    <div class="container">
+
+      <!-- Cabecera desplegable -->
+      <button class="export-header" onclick="toggleExportPanel()" aria-expanded="true" aria-controls="export-body">
+        <span class="export-header-left">
+          <span class="export-icon-wrap">📥</span>
+          <span>
+            <span class="export-title">Exportar datos</span>
+            <span class="export-subtitle">Descarga los cálculos y el análisis en el formato que prefieras</span>
+          </span>
+        </span>
+        <span class="export-chevron export-chevron-open" id="export-chevron">▼</span>
+      </button>
+
+      <!-- Cuerpo desplegable -->
+      <div class="export-body" id="export-body">
+
+        <div class="export-grid">
+
+          <!-- Columna 1: ¿Qué exportar? -->
+          <div class="export-col">
+            <p class="export-col-label">¿Qué exportar?</p>
+            <div class="export-pills" role="group" aria-label="Contenido a exportar">
+              <label class="export-pill">
+                <input type="radio" name="export-content" value="calculos" checked/>
+                <span>🔢 Cálculos</span>
+              </label>
+              <label class="export-pill">
+                <input type="radio" name="export-content" value="analisis"/>
+                <span>📊 Análisis</span>
+              </label>
+              <label class="export-pill">
+                <input type="radio" name="export-content" value="ambos"/>
+                <span>📦 Ambos</span>
+              </label>
+            </div>
+            <p class="export-col-hint" id="export-content-hint">
+              Tablas mensuales de electricidad, agua, consumibles, limpieza y categorías.
+            </p>
+          </div>
+
+          <!-- Columna 2: Formato -->
+          <div class="export-col">
+            <p class="export-col-label">Formato de exportación</p>
+            <div class="export-format-row">
+              <select id="export-format" class="export-select" onchange="updateExportHint()">
+                <option value="csv">📋 CSV — Hoja de cálculo</option>
+                <option value="json">🗂 JSON — Datos estructurados</option>
+                <option value="txt">📄 TXT — Texto legible</option>
+                <option value="pdf">🖨 PDF — Informe imprimible</option>
+              </select>
+            </div>
+            <p class="export-col-hint" id="export-format-hint">
+              Compatible con Excel, Google Sheets, LibreOffice Calc.
+            </p>
+          </div>
+
+          <!-- Columna 3: Botón -->
+          <div class="export-col export-col-btn">
+            <button class="btn-export-download" onclick="ejecutarExport()" id="btn-export-main">
+              <span class="export-dl-icon">⬇</span>
+              <span id="btn-export-label">Descargar CSV</span>
+            </button>
+            <p class="export-col-hint" style="text-align:center" id="export-status"></p>
+          </div>
+
+        </div>
+
+        <p class="export-note">
+          ℹ️ Los datos se generan a partir de los últimos cálculos realizados. Si no has calculado algún indicador, aparecerá como <em>sin datos</em>.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
   <footer class="site-footer-bottom">
     <div class="container">
       <p>© 2025 Institut Tecnològic de Barcelona · CFGS ASIX · Grup G8 · <strong>Fran Mendoza &amp; Rubén Mateos</strong></p>
@@ -593,6 +673,8 @@
     </div>
   </footer>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
