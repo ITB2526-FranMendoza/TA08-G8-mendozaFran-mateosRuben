@@ -590,14 +590,54 @@ function calcularAgua() {
     </div>`;
 
   // Gráfico usa exactamente los mismos valores que la tabla (dataMeses)
+  // Para agosto: si el valor es muy pequeño, forzar un mínimo visible en el gráfico
   const chartDataAgua = MESES.map((_,i) => {
+    const found = dataMeses.find(d => d.m === i);
+    if (!found) return 0;
+    const val = parseFloat((found.litros/1000).toFixed(2));
+    // Agosto: asegurar barra visible mínima (al menos 3% del máximo del gráfico)
+    if (i === 7 && val > 0) {
+      const maxVal = Math.max(...dataMeses.map(d => d.litros/1000));
+      return Math.max(val, maxVal * 0.03);
+    }
+    return val;
+  });
+  // Chart con tooltip que muestra el valor real (no el mínimo visual)
+  if (charts['chart-agua']) charts['chart-agua'].destroy();
+  const ctxAgua = document.getElementById('chart-agua')?.getContext('2d');
+  if (!ctxAgua) return;
+  const realDataAgua = MESES.map((_,i) => {
     const found = dataMeses.find(d => d.m === i);
     return found ? parseFloat((found.litros/1000).toFixed(2)) : 0;
   });
-  crearChart('chart-agua', MESES.map(m=>m.substring(0,3)), [{
-    label:'m³ estimados', data:chartDataAgua,
-    backgroundColor:MESES.map((_,i)=>colorAgua(i)), borderRadius:6, borderSkipped:false
-  }], 'bar', 'm³');
+  charts['chart-agua'] = new Chart(ctxAgua, {
+    type: 'bar',
+    data: { labels: MESES.map(m=>m.substring(0,3)), datasets: [{
+      label: 'm³ estimados', data: chartDataAgua,
+      backgroundColor: MESES.map((_,i)=>colorAgua(i)), borderRadius: 6, borderSkipped: false
+    }]},
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { color: '#8b949e', font: { family: 'DM Sans', size: 12 }, boxWidth: 14 } },
+        tooltip: {
+          backgroundColor: '#161b22', borderColor: '#30363d', borderWidth: 1,
+          titleColor: '#e6edf3', bodyColor: '#8b949e',
+          callbacks: {
+            label: c => {
+              const real = realDataAgua[c.dataIndex];
+              return ' ' + real.toLocaleString('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' m³';
+            }
+          }
+        }
+      },
+      scales: {
+        x: { grid: { color: 'rgba(48,54,61,0.5)' }, ticks: { color: '#8b949e', font: { family: 'Space Mono', size: window.innerWidth < 600 ? 9 : 11 }, maxRotation: window.innerWidth < 600 ? 45 : 0, minRotation: window.innerWidth < 600 ? 45 : 0 } },
+        y: { grid: { color: 'rgba(48,54,61,0.5)' }, ticks: { color: '#8b949e', font: { family: 'DM Sans', size: window.innerWidth < 600 ? 9 : 11 }, maxTicksLimit: window.innerWidth < 600 ? 5 : 8 } }
+      }
+    }
+  });
 
   aplicarAhorro('agua');
 }
@@ -647,20 +687,21 @@ function calcularConsumibles() {
       </div>
       ${pillsEstrategias(
         {t:'A',txt:`Estrategia A — Tendencia ${tend>=0?'+':''}${(tend*100).toFixed(0)}% · Variabilidad ±5%`},
-        {t:'B',txt:'Estrategia B — Agosto y julio 0€ (cerrado/sin alumnos), pico sep (inicio curso)'}
+        {t:'B',txt:'Estrategia B — Agosto 0€ (cerrado), julio mínimo (solo profes), pico sep (inicio curso)'}
       )}
       <div class="result-info">
         <div class="result-info-row"><span>📊 Base mensual</span><strong>120 €/mes (Lyreco 2024)</strong></div>
         <div class="result-info-row"><span>📈 Tendencia</span><strong style="color:${tend>=0?'var(--accent3)':'var(--accent)'}">${tend>=0?'+':''}${(tend*100).toFixed(0)}%/año</strong></div>
         <div class="result-info-row"><span>🏫 Mes más alto</span><strong style="color:var(--accent4)">${maxM.mes} — ${fmtEur(maxM.gasto)}</strong></div>
         <div class="result-info-row"><span>📉 Mes más bajo (activo)</span><strong>${minNoZero?.mes||'—'} — ${fmtEur(minNoZero?.gasto||0)}</strong></div>
-        <div class="result-info-row"><span>🚫 Julio y Agosto</span><strong style="color:#6e7681">0,00 € — sin alumnos / centro cerrado</strong></div>
+        <div class="result-info-row"><span>🚫 Agosto</span><strong style="color:#6e7681">0,00 € — centro cerrado</strong></div>
+        <div class="result-info-row"><span>📉 Julio</span><strong style="color:#6e7681">Actividad mínima (~30€) — solo profes</strong></div>
       </div>
       <table class="result-table">
         <thead><tr><th>Mes</th><th class="col-num">Gasto</th><th class="col-num">Coef.</th><th class="col-num">% total</th></tr></thead>
         <tbody>${dataMeses.map(d=>`<tr>
-          <td>${d.mes}${(d.m===7||d.m===6)?' 🚫':''}</td>
-          <td class="col-num ${(d.m===7||d.m===6)?'closed':'highlight'}">${fmtEur(d.gasto)}</td>
+          <td>${d.mes}${d.m===7?' 🚫':d.m===6?' 📉':''}</td>
+          <td class="col-num ${d.m===7?'closed':d.m===6?'summer':'highlight'}">${fmtEur(d.gasto)}</td>
           <td class="col-num" style="color:var(--text-muted)">${ESTAC_CONS[d.m].toFixed(2)}×</td>
           <td class="col-num" style="color:var(--accent4)">${totalEur>0?((d.gasto/totalEur)*100).toFixed(1):'0.0'}%</td>
         </tr>`).join('')}</tbody>
@@ -881,13 +922,31 @@ function crearChartCronograma() {
   const values = [base, base * 0.90, base * 0.80, base * 0.70];
   const colors = ['#8b949e', '#e3b341', '#f78166', '#3fb950'];
 
-  crearChart('chart-crono', años, [{
-    label: 'Coste anual estimado (€)',
-    data: values,
-    backgroundColor: colors,
-    borderRadius: 8,
-    borderSkipped: false
-  }], 'bar', '€');
+  if (charts['chart-crono']) charts['chart-crono'].destroy();
+  const ctxCrono = document.getElementById('chart-crono')?.getContext('2d');
+  if (!ctxCrono) return;
+  charts['chart-crono'] = new Chart(ctxCrono, {
+    type: 'bar',
+    data: { labels: años, datasets: [{ label: 'Coste anual estimado (€)', data: values, backgroundColor: colors, borderRadius: 8, borderSkipped: false }] },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { color: '#8b949e', font: { family: 'DM Sans', size: 12 }, boxWidth: 14 } },
+        tooltip: {
+          backgroundColor: '#161b22', borderColor: '#30363d', borderWidth: 1,
+          titleColor: '#e6edf3', bodyColor: '#8b949e',
+          callbacks: {
+            label: c => ' ' + c.parsed.y.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €'
+          }
+        }
+      },
+      scales: {
+        x: { grid: { color: 'rgba(48,54,61,0.5)' }, ticks: { color: '#8b949e', font: { family: 'DM Sans', size: 12 } } },
+        y: { grid: { color: 'rgba(48,54,61,0.5)' }, ticks: { color: '#8b949e', font: { family: 'DM Sans', size: 11 }, callback: v => v.toLocaleString('es-ES') + ' €' } }
+      }
+    }
+  });
 }
 
 
